@@ -29,6 +29,15 @@ app.get("/static/js/:staticFilename", function (request, response) {
     response.sendfile("static/js/" + request.params.staticFilename);
 });
 
+app.get("/all_data", function(request, response){
+
+    var data = {"test" : "test indeed"};
+    response.send({
+        data : data,
+        success : true
+    });
+});
+
 
 
 
