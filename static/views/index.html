@@ -20,10 +20,12 @@
   <script>
     var socket = io.connect("http://localhost:8888");
     $("#talk").submit(function() {
-        socket.emit('msg', {body : $("message").val()});
+        socket.emit('msg', {body : $("#message").val()});
         return false;
     });
+    
     socket.on("newmsg", function(data) {
+        console.log(data);
         $("#messages").append($("<li>").html(data.body));
     });
   </script>
