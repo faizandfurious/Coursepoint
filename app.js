@@ -1,6 +1,18 @@
 var express = require("express"); // imports express
 var app = express();        // create a new instance of express
 var io = require('socket.io').listen(8888); //instantiates socket server and run on 8888
+var mongo = require('mongodb');
+var host = 'localhost';
+var port = mongo.Connection.DEFAULT_PORT;
+
+var optionsWithEnableWriteAccess = { w: 1 };
+var dbName = 'testDb';
+
+var client = new mongo.Db(
+    dbName,
+    new mongo.Server(host, port),
+    optionsWithEnableWriteAccess
+);
 
 io.sockets.on("connection", function(socket) {
     socket.on('msg', function(data) {
@@ -31,7 +43,13 @@ app.get("/static/js/:staticFilename", function (request, response) {
 
 app.get("/all_data", function(request, response){
 
-    var data = {"test" : "test indeed"};
+    var info = client.studentInfo.find({}).toArray(function(error, result){
+        if (error)
+            throw error;
+        console.log(result);
+    });
+
+    var data = { allData : info};
     response.send({
         data : data,
         success : true
