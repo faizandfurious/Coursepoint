@@ -1,15 +1,17 @@
 <!DOCTYPE html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link href="../styles/reset.css" rel="stylesheet" type="text/css">
     <link href="../styles/app.css" rel="stylesheet" type="text/css">
+    <link href="../styles/login.css" rel="stylesheet" type="text/css">
   </head>
   <body>
     <span id="topbar">COURSEPOINT</span>
     <div id="content">
-        <form>
+        <form id="sign_in_form">
             <input type="text" name="username" placeholder="Username" autofocus><br>
-            <input type="password" placeholder="Password" name="pwd"><br>
-            <input class="btn green-btn" name="submit"  type="submit" value="Sign In"/>
+            <input type="password" placeholder="Password" name="password"><br>
+            <input id="sign_in_button" class="btn green-btn" name="submit"  type="button" value="Sign In"/>
         </form>
     </div>
 

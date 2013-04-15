@@ -8,23 +8,38 @@
 
 html{
     font-family: "CubanoRegular";
-    max-width: 320px;
-    max-height:480px;
+/*    max-width: 320px;
+    max-height:480px;*/
 }
 
 body{
     font-size: 62.5%;
-    background-image: url("images/ghc.jpg");
-    background-repeat:no-repeat;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+    height:480px;
+    border: .4px solid black;
+    /* fallback */
+    background-color: #F2F2F2;
+    background-repeat: repeat-x;
+
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F2F2F2), to(#E6E6E6));
+
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(top, #F2F2F2, #E6E6E6);
+
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(top, #F2F2F2, #E6E6E6);
+
+    /* IE 10 */
+    background: -ms-linear-gradient(top, #F2F2F2, #E6E6E6);
+
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(top, #F2F2F2, #E6E6E6);
 }
 
 #content{
-
+    margin-top:44px;
 }
+
 
 form{
     padding-top:150px;
@@ -63,6 +78,28 @@ form:first-child{
 
 }
 
+.grey_drop{
+
+    /* fallback */
+    background-color: #F2F2F2;
+    background-repeat: repeat-x;
+
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F2F2F2), to(#E6E6E6));
+
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(top, #F2F2F2, #E6E6E6);
+
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(top, #F2F2F2, #E6E6E6);
+
+    /* IE 10 */
+    background: -ms-linear-gradient(top, #F2F2F2, #E6E6E6);
+
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(top, #F2F2F2, #E6E6E6);
+}
+
 .btn{
     font-family: "CubanoRegular";
     padding:3px 8px;
@@ -75,19 +112,19 @@ form:first-child{
     background-repeat: repeat-x;
 
     /* Safari 4-5, Chrome 1-9 */
-    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#E6E6E6), to(#F2F2F2));
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F2F2F2), to(#E6E6E6));
 
     /* Safari 5.1, Chrome 10+ */
-    background: -webkit-linear-gradient(top, #E6E6E6, #F2F2F2);
+    background: -webkit-linear-gradient(top, #F2F2F2, #E6E6E6);
 
     /* Firefox 3.6+ */
-    background: -moz-linear-gradient(top, #E6E6E6, #F2F2F2);
+    background: -moz-linear-gradient(top, #F2F2F2, #E6E6E6);
 
     /* IE 10 */
-    background: -ms-linear-gradient(top, #E6E6E6, #F2F2F2);
+    background: -ms-linear-gradient(top, #F2F2F2, #E6E6E6);
 
     /* Opera 11.10+ */
-    background: -o-linear-gradient(top, #E6E6E6, #F2F2F2);
+    background: -o-linear-gradient(top, #F2F2F2, #E6E6E6);
 }
 
 .btn:active{
@@ -157,9 +194,23 @@ form:first-child{
     
 }
 
+button#menu{
+    position:absolute;
+    margin-left:5px;
+    margin-top:5px;
+    left:0px;
+    background-image:url("images/menu.png");
+    width:35px;
+    height:35px;
+    background-size: 35px 35px;
+    border-radius:0px;
+}
+
+
 #topbar{
     position:fixed;
-    width:320px;
+    top: 0px;
+    width:100%;
     height:44px;
     font-size:2.2em;
     text-align: center;
@@ -171,17 +222,17 @@ form:first-child{
     background-repeat: repeat-x;
 
     /* Safari 4-5, Chrome 1-9 */
-    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#E6E6E6), to(#F2F2F2));
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F2F2F2), to(#E6E6E6));
 
     /* Safari 5.1, Chrome 10+ */
-    background: -webkit-linear-gradient(top, #E6E6E6, #F2F2F2);
+    background: -webkit-linear-gradient(top, #F2F2F2, #E6E6E6);
 
     /* Firefox 3.6+ */
-    background: -moz-linear-gradient(top, #E6E6E6, #F2F2F2);
+    background: -moz-linear-gradient(top, #F2F2F2, #E6E6E6);
 
     /* IE 10 */
-    background: -ms-linear-gradient(top, #E6E6E6, #F2F2F2);
+    background: -ms-linear-gradient(top, #F2F2F2, #E6E6E6);
 
     /* Opera 11.10+ */
-    background: -o-linear-gradient(top, #E6E6E6, #F2F2F2);
+    background: -o-linear-gradient(top, #F2F2F2, #E6E6E6);
 }
