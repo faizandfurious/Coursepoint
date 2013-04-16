@@ -274,3 +274,8 @@ button#add_class_button:active{
     /* Opera 11.10+ */
     background: -o-linear-gradient(top, #F2F2F2, #E6E6E6);
 }
+
+
+.hidden{
+    visibility:hidden;
+}

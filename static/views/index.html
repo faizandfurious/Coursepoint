@@ -4,6 +4,7 @@
     <link href="../styles/reset.css" rel="stylesheet" type="text/css">
     <link href="../styles/app.css" rel="stylesheet" type="text/css">
     <link href="../styles/index.css" rel="stylesheet" type="text/css">
+    <link href="../styles/class.css" rel="stylesheet" type="text/css">
   </head>
   <body>
     <div id="black_bar"></div>
@@ -14,20 +15,55 @@
 
     </span>
     <div id="content">
-      <div class="class grey_drop" id="0">
-        <span class="class_image">
-        </span>
-        <span class="class_name">
-          Calculus
-        </span>
-        <span class="class_location">
-          Wean Hall 5301
-        </span>
-        <span class="class_time">
-          9:30am
-        </span>
-        <span class="arrow">
-        </span>
+      <!-- Login HTML Markup -->
+      <div id="login_content">
+          <form id="sign_in_form">
+              <input type="text" name="username" placeholder="Username" autofocus><br>
+              <input type="password" placeholder="Password" name="password"><br>
+              <input id="sign_in_button" class="btn green-btn" name="submit"  type="button" value="Sign In"/>
+          </form>
+      </div>
+
+      <!-- Class Selection List HTML Markup -->
+      <div id="class_list_content">
+        <div class="class grey_drop" id="0">
+          <span class="class_image">
+          </span>
+          <span class="class_name">
+            Calculus
+          </span>
+          <span class="class_location">
+            Wean Hall 5301
+          </span>
+          <span class="class_time">
+            9:30am
+          </span>
+          <span class="arrow">
+          </span>
+        </div>
+      </div>
+
+      <!-- Quiz View HTML Markup -->
+
+      <div id="quiz_content">
+        <div id="class_header">
+          <span class="class_portrait_image">
+          </span>
+          <span class="clock">
+          </span>
+        </div>
+        <div style="clear: both;"></div>
+        <div class="question">
+          <h3>Question</h3>
+          <p id="question_prompt">Calculate the slope of the line that is tangent to y = x^2 at the point on the curve where x = 4.</p>
+          <h3>Answer</h3>
+          <ul class="answer_list">
+            <li>The slope is 8.</li>
+            <li>The slope is 3.</li>
+            <li>The slope is 5.</li>
+            <li>The slope is 1.</li>
+          </ul>
+        </div>
       </div>
     </div>
 
