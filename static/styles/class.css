@@ -41,6 +41,9 @@
   padding:12px 10px;
   clear:both;
   background-color:#ffffff;
+  -moz-box-shadow: inset 1px 1px 3px 1px #ccc;
+  -webkit-box-shadow: inset 1px 1px 3px 1px #ccc;
+  box-shadow: inset 1px 1px 3px 1px #ccc;
 }
 
 h3{
@@ -51,7 +54,8 @@ h3{
 .answer_list{
   font-size:1.6em;
   border-radius:6px;
-  background-color:#ddd;
+  background-color:#eee;
+  border: 1px solid #aaa;
 }
 
 .answer_list li{
