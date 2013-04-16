@@ -1,0 +1,67 @@
+.quiz{
+  margin: 10px;
+  padding: 10px 0px;
+}
+
+.class_portrait_image{
+    float:left;
+    display:inline-block;
+    background-image: url('images/calculus.png');
+    width:80px;
+    height:100px;
+    background-repeat:no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    border-radius: 6px;
+    border:0.4px solid #ddd;
+}
+
+.clock{
+  float:right;
+  background-image: url("images/clock.png");
+  width:100px;
+  height:100px;
+  background-repeat:no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+
+#class_header{
+  margin-bottom:5px;
+}
+
+.question{
+  border-radius:6px;
+  margin-top:5px;
+  padding:12px 10px;
+  clear:both;
+  background-color:#ffffff;
+}
+
+h3{
+  font-size:2em;
+  margin:5px 0px;
+}
+
+.answer_list{
+  font-size:1.6em;
+  border-radius:6px;
+  background-color:#ddd;
+}
+
+.answer_list li{
+  border-top: 1px solid #aaa;
+  font-family: 'Century Gothic', 'Helvetica';
+  padding:12px 10px;
+}
+
+.answer_list li:first-child{
+  border-top: 0px;
+  font-family: 'Century Gothic', 'Helvetica';
+  padding:12px 10px;
+}
