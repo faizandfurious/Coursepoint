@@ -41,6 +41,18 @@ app.get("/static/js/:staticFilename", function (request, response) {
     response.sendfile("static/js/" + request.params.staticFilename);
 });
 
+//get a student object by id (for the student ux)
+app.get("/students/:id", function(request, response) {
+    var query = {id : request.params.id};
+    var student = client.studentInfo.findOne(query);
+    response.send({
+        student : student,
+        sucess : true
+    });
+});
+
+
+
 app.get("/all_data", function(request, response){
 
     var info = client.studentInfo.find({}).toArray(function(error, result){
