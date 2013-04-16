@@ -5,16 +5,60 @@ var quiz_page = $("#quiz_content");
 
 
 $(document).ready(function(){
-    class_list_page.hide();
-    quiz_page.hide();
+    showLogin();
     getData();
 });
 
+function showLogin(){
+    class_list_page.hide();
+    quiz_page.hide();
+    login_page.show();
+}
+
+
+function showClass(){
+    class_list_page.show();
+    quiz_page.hide();
+    login_page.hide();
+}
+
+
+function showQuiz(){
+    class_list_page.hide();
+    quiz_page.show();
+    login_page.hide();
+}
+
+
+// BIND MENU ACTIONS
+var menuOpen = false;
 
 //THIS CODE IS FOR THE CLASS LIST PAGE
 $("#menu_button").click(function(){
-    console.log("menu button clicked");
+    toggleMenu();
 });
+
+$("#home_button").click(function(){
+    toggleMenu();
+    showClass();
+});
+
+$("#logout_button").click(function(){
+    toggleMenu();
+    showLogin();
+});
+
+
+function toggleMenu(){
+    menuOpen = !menuOpen;
+    console.log("1");
+    if (menuOpen){
+        $("#menu").animate({left:0});
+    }
+    else{
+        $("#menu").animate({left:-230});
+    }
+}
 
 
 $("#add_class_button").click(function(){
@@ -27,8 +71,7 @@ $("#0").click(function(){
     getClass(0);
 
 
-    class_list_page.hide();
-    quiz_page.show();
+    showQuiz();
 
 });
 
@@ -47,8 +90,7 @@ $("#sign_in_button").click(function(){
     });
 
     if(login_successful){
-        login_page.hide();
-        class_list_page.show();
+        showClass();
     }
 });
 

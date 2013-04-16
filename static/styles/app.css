@@ -279,3 +279,47 @@ button#add_class_button:active{
 .hidden{
     visibility:hidden;
 }
+
+/* ------------- MENU -------------- */
+
+#menu{
+  background: #333;
+  position: fixed;
+  top: 44px;
+  bottom: 0;
+  left: 0;
+  width: 200px;
+  z-index: 98;
+  -webkit-box-shadow: 0 0 20px rgba(0,0,0,.76);
+  -moz-box-shadow: 0 0 20px rgba(0,0,0,.76);
+  box-shadow: 0 0 20px rgba(0,0,0,.76);
+  left: -230px;
+}
+
+#menu .item{
+    color: #333;
+    display: block;
+    margin: 20px 40px;
+    font-size: 2em;
+    line-height: 36px;
+    background-color:#E6E6E6;
+    border-radius:6px;
+    text-align:center;
+}
+
+#menu .item.navigate{
+  background: #3a3a3a url('../img/menu-navigate.png') 8px center no-repeat;
+  background-size: auto 50%;
+}
+#menu .item.manual{
+  background: #3a3a3a url('../img/menu-drive.png') 10px center no-repeat;
+  background-size: auto 45%;
+}
+#menu .item.training{
+  background: #3a3a3a url('../img/menu-training.png') 10px center no-repeat;
+  background-size: auto 45%;
+}
+#menu .item.settings{
+  background: #3a3a3a url('../img/menu-settings.png') 10px center no-repeat;
+  background-size: auto 45%;
+}
