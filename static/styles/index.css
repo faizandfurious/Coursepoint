@@ -28,24 +28,24 @@
 
 .class_name{
     color:#333333;
-    font-size:2em;
+    font-size:1.8em;
     position:absolute;
-    left:100px;
+    left:90px;
     top:20px;
 }
 
 .class_location{
     color:#666666;
-    font-size:1.6em;
+    font-size:1.5em;
     position:absolute;
-    left:100px;
+    left:90px;
     top:42px;
 }
 
 .class_time{
     color:#88A80D;
-    font-size:1.6em;
+    font-size:1.5em;
     position:absolute;
-    right:50px;
+    right:35px;
     top:32px;
 }

@@ -196,18 +196,49 @@ form:first-child{
 
 button#menu{
     position:absolute;
-    margin-left:5px;
-    margin-top:5px;
+    margin-left:7px;
+    margin-top:7px;
     left:0px;
-    background-image:url("images/menu.png");
     width:35px;
-    height:35px;
-    background-size: 35px 35px;
+    height:31px;
+    background-image:url("images/menu_button.png");
     border-radius:0px;
+    background-repeat:no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+button#menu:active{
+    background-image:url("images/menu_button_clicked.png");
+
+}
+
+button#add{
+    position:absolute;
+    margin-right:7px;
+    margin-top:7px;
+    right:0px;
+    width:35px;
+    height:31px;
+    background-image:url("images/add_button.png");
+    border-radius:0px;
+    background-repeat:no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+button#add:active{
+    background-image:url("images/add_button_clicked.png");
+
 }
 
 
 #topbar{
+    z-index: 99;
     position:fixed;
     top: 0px;
     width:100%;
