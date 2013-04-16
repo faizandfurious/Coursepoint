@@ -4,6 +4,7 @@ var class_list_page = $("#class_list_content");
 var quiz_page = $("#quiz_content");
 var menu_button = $("#menu_button");
 var add_class_button = $("#add_class_button");
+
 // BIND MENU ACTIONS
 var menuOpen = false;
 
@@ -13,13 +14,6 @@ $(document).ready(function(){
     showLogin();
     getData();
 });
-
-//If HTML is clicked, hide the side menu (if necessary)
-$('html').click(function() {
-    if(menuOpen){
-        toggleMenu();
-    }
- });
 
 function hideTopbarButtons(){
     menu_button.hide();
@@ -113,11 +107,8 @@ function toggleMenu(){
     else{
         $("#menu").animate({left:-230});
     }
-    event.stopPropagation();
 }
- $('#menu').click(function(event){
-    event.stopPropagation();
- });
+
 
 $("#add_class_button").click(function(){
     console.log("add class button clicked");

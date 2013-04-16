@@ -308,3 +308,8 @@ button#add_class_button:active, button#add_class_button:focus{
   background: #3a3a3a url('../img/menu-settings.png') 10px center no-repeat;
   background-size: auto 45%;
 }
+
+#quiz_content{
+    margin:10px;
+    padding-top:10px;
+}
