@@ -32,6 +32,17 @@ app.get("/static/styles/:staticFilename", function (request, response) {
 });
 
 // This is for serving files in the static directory
+app.get("/static/styles/fonts/:staticFilename", function (request, response) {
+    response.sendfile("static/styles/fonts/" + request.params.staticFilename);
+});
+
+// This is for serving files in the static directory
+app.get("/static/styles/images/:staticFilename", function (request, response) {
+    response.sendfile("static/styles/images/" + request.params.staticFilename);
+});
+
+
+// This is for serving files in the static directory
 app.get("/static/views/:staticFilename", function (request, response) {
     response.sendfile("static/views/" + request.params.staticFilename);
 });
@@ -41,6 +52,7 @@ app.get("/static/js/:staticFilename", function (request, response) {
     response.sendfile("static/js/" + request.params.staticFilename);
 });
 
+<<<<<<< HEAD
 //get a student object by id (for the student ux)
 app.get("/students/:id", function(request, response) {
     var query = {id : request.params.id};
@@ -53,6 +65,16 @@ app.get("/students/:id", function(request, response) {
 
 
 
+=======
+//CLASS ROUTES
+
+//STUDENT ROUTES
+
+
+
+//QUIZ ROUTES
+//RETREIVE ALL QUIZ DATA
+>>>>>>> a2f403dde7348281200f2552255006efe0abcb3b
 app.get("/all_data", function(request, response){
 
     var info = client.studentInfo.find({}).toArray(function(error, result){
