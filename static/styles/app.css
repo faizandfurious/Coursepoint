@@ -17,6 +17,10 @@ body{
     height:480px;
 }
 
+button{
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
 #content{
     margin-top:44px;
 }
@@ -114,7 +118,7 @@ form:first-child{
     background: -o-linear-gradient(top, #F2F2F2, #E6E6E6);
 }
 
-.btn:active{
+.btn:active, .btn:focus{
     /* fallback */
     background-color: #004C20;
     background-repeat: repeat-x;
@@ -159,7 +163,7 @@ form:first-child{
     background: -o-linear-gradient(top, #24B237, #007420);
 }
 
-.green-btn:active{
+.green-btn:active, .green-btn:focus{
     /* fallback */
     background-color: #004C20;
     background-repeat: repeat-x;
@@ -197,7 +201,7 @@ button#menu_button{
     background-size: cover;
 }
 
-button#menu_button:active{
+button#menu_button:active, button#menu_button:focus{
     background-image:url("images/menu_button_clicked.png");
 
 }
@@ -218,7 +222,7 @@ button#add_class_button{
     background-size: cover;
 }
 
-button#add_class_button:active{
+button#add_class_button:active, button#add_class_button:focus{
     background-image:url("images/add_button_clicked.png");
 
 }
