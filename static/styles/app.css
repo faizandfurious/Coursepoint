@@ -15,25 +15,6 @@ html{
 body{
     font-size: 62.5%;
     height:480px;
-    border-bottom: 1px solid #ddd;
-    /* fallback */
-    background-color: #F2F2F2;
-    background-repeat: repeat-x;
-
-    /* Safari 4-5, Chrome 1-9 */
-    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F2F2F2), to(#E6E6E6));
-
-    /* Safari 5.1, Chrome 10+ */
-    background: -webkit-linear-gradient(top, #F2F2F2, #E6E6E6);
-
-    /* Firefox 3.6+ */
-    background: -moz-linear-gradient(top, #F2F2F2, #E6E6E6);
-
-    /* IE 10 */
-    background: -ms-linear-gradient(top, #F2F2F2, #E6E6E6);
-
-    /* Opera 11.10+ */
-    background: -o-linear-gradient(top, #F2F2F2, #E6E6E6);
 }
 
 #content{
