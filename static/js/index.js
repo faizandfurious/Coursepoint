@@ -8,13 +8,10 @@ var add_class_button = $("#add_class_button");
 // BIND MENU ACTIONS
 var menuOpen = false;
 
-var student;
-var courses;
 
 
 $(document).ready(function(){
     showLogin();
-    getData();
 });
 
 function hideTopbarButtons(){
@@ -142,34 +139,61 @@ $("#sign_in_button").click(function(){
 
     if(login_successful){
         loadStudentData(values["username"]);
+        console.log("test");
         showClass();
     }
 });
 
 
+
+
 //load student info and all courses for that student
 function loadStudentData (username) {
+    var student;
     $.ajax({
         type: "post",
-        url: "/student",
         data: {username: username},
+        url: "/student",
         success: function(data){
             student = data.student;
+            console.log("success");
         }
     });
 
     courses = [];
-
-    student.courses.forEach(function(id) {
-        $.ajax({
-            type: "post",
-            url: "/course",
-            data: {id : id},
-            success: function(data){
-                courses.push(data.course);
-            }
+    if(student !== undefined){
+        student.courses.forEach(function(id) {
+            $.ajax({
+                type: "post",
+                url: "/course",
+                data: {id : id},
+                success: function(data){
+                    courses.push(data.course);
+                }
+            });
         });
-    });
+    }   
+}
 
-    
+//ROUTES FOR DATA AND STUFF
+//Get a specific class via the ID
+function getClass(id){
+    $.ajax({
+        type: "get",
+        url:"/get_class/" + id,
+        success: function(data){
+            console.log(data);
+        }
+    })
+}
+
+//Get all the data
+function getData(){
+    $.ajax({
+        type: "get",
+        url:"/all_data",
+        success: function(data){
+            console.log(data);
+        }
+    });
 }

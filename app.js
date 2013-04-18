@@ -1,5 +1,8 @@
 var express = require("express"); // imports express
 var app = express();        // create a new instance of express
+
+app.use(express.bodyParser());
+
 var io = require('socket.io').listen(8888); //instantiates socket server and run on 8888
 var mongo = require('mongodb');
 var host = 'localhost';
@@ -68,8 +71,8 @@ app.get("/static/js/:staticFilename", function (request, response) {
 
 app.post("/course", function(request, response) {
     var id = request.body.id;
-    var course = courseCollection.findOne({id : id});
-    
+    // var course = courseCollection.findOne({id : id});
+    var course = {"Subject" : "Calculus"};
     var data = {course : course};
     response.send({
         data : data,
@@ -83,11 +86,15 @@ app.post("/course", function(request, response) {
 
 app.post("/student", function(request, response) {
     var username = request.body.username;
-    var student = studentCollection.findOne({username : username});
+    // var student = studentCollection.findOne({username : username});
     
-    var data = {student : student};
+    // var data = {student : student};
+    var courses = [1, 2];
+    var student = {"name" : "Faiz",
+                    "courses" : courses,
+                    };
     response.send({
-        data : data,
+        data : student,
         success : true
     });
         
