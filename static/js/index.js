@@ -8,6 +8,8 @@ var add_class_button = $("#add_class_button");
 // BIND MENU ACTIONS
 var menuOpen = false;
 
+var student;
+var courses;
 
 
 $(document).ready(function(){
@@ -139,32 +141,35 @@ $("#sign_in_button").click(function(){
     });
 
     if(login_successful){
+        loadStudentData(values["username"]);
         showClass();
     }
 });
 
 
-
-
-//ROUTES FOR DATA AND STUFF
-//Get a specific class via the ID
-function getClass(id){
+//load student info and all courses for that student
+function loadStudentData (username) {
     $.ajax({
-        type: "get",
-        url:"/get_class_" + id,
+        type: "post",
+        url: "/student",
+        data: {username: username},
         success: function(data){
-            console.log(data);
+            student = data.student;
         }
-    })
-}
+    });
 
-//Get all the data
-function getData(){
-    $.ajax({
-        type: "get",
-        url:"/all_data",
-        success: function(data){
-            console.log(data);
-        }
-    })
+    courses = [];
+
+    student.courses.forEach(function(id) {
+        $.ajax({
+            type: "post",
+            url: "/course",
+            data: {id : id},
+            success: function(data){
+                courses.push(data.course);
+            }
+        });
+    });
+
+    
 }

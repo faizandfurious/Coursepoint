@@ -7,12 +7,24 @@ var port = mongo.Connection.DEFAULT_PORT;
 
 var optionsWithEnableWriteAccess = { w: 1 };
 var dbName = 'testDb';
+var studentCollection;
+var courseCollection;
 
 var client = new mongo.Db(
     dbName,
     new mongo.Server(host, port),
     optionsWithEnableWriteAccess
 );
+
+client.open(onDbReady);
+
+function onDbReady(error){
+    if (error)
+        throw error;
+    studentCollection = client.collection('studentCollection');
+    courseCollection = client.collection('courseCollection');
+}
+
 
 io.sockets.on("connection", function(socket) {
     socket.on('msg', function(data) {
@@ -52,40 +64,36 @@ app.get("/static/js/:staticFilename", function (request, response) {
     response.sendfile("static/js/" + request.params.staticFilename);
 });
 
-//get a student object by id (for the student ux)
-app.get("/students/:id", function(request, response) {
-    var query = {id : request.params.id};
-    var student = client.studentInfo.findOne(query);
-    response.send({
-        student : student,
-        sucess : true
-    });
-});
-//CLASS ROUTES
+//COURSE ROUTES
 
-//STUDENT ROUTES
-
-
-
-//QUIZ ROUTES
-//RETREIVE ALL QUIZ DATA
-app.get("/all_data", function(request, response){
-
-    var info = client.studentInfo.find({}).toArray(function(error, result){
-        if (error)
-            throw error;
-        console.log(result);
-    });
-
-    var data = { allData : info};
+app.post("/course", function(request, response) {
+    var id = request.body.id;
+    var course = courseCollection.findOne({id : id});
+    
+    var data = {course : course};
     response.send({
         data : data,
         success : true
     });
+        
 });
 
 
+//STUDENT ROUTES
 
+app.post("/student", function(request, response) {
+    var username = request.body.username;
+    var student = studentCollection.findOne({username : username});
+    
+    var data = {student : student};
+    response.send({
+        data : data,
+        success : true
+    });
+        
+});
+
+//QUIZ ROUTES
 
 function initServer() {
 }
