@@ -71,7 +71,11 @@ app.get("/static/js/:staticFilename", function (request, response) {
 
 app.post("/course", function(request, response) {
     var id = request.body.id;
-    // var course = courseCollection.findOne({id : id});
+    // var course = courseCollection.findOne({id : id}, function(err, doc){
+    //     if(err)
+    //         throw(err);
+    //     console.log(doc);
+    // });
     var course = {"Subject" : "Calculus"};
     var data = {course : course};
     response.send({
@@ -87,7 +91,11 @@ app.post("/course", function(request, response) {
 app.post("/student", function(request, response) {
     var username = request.body.username;
     studentCollection.insert({username : username}, function (err) { });
-    var student = studentCollection.findOne({});
+    var student = studentCollection.findOne({}, function(err, doc){
+        if(err)
+            throw(err);
+        console.log(doc);
+    });
     
     //var courses = [1, 2];
     //var student = {"name" : "Faiz",
