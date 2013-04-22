@@ -8,6 +8,8 @@ var add_class_button = $("#add_class_button");
 // BIND MENU ACTIONS
 var menuOpen = false;
 
+var student;
+var courses;
 
 
 $(document).ready(function(){
@@ -149,14 +151,14 @@ $("#sign_in_button").click(function(){
 
 //load student info and all courses for that student
 function loadStudentData (username) {
-    var student;
     $.ajax({
         type: "post",
         data: {username: username},
         url: "/student",
-        success: function(data){
-            student = data.student;
+        success: function(response){
+            student = response.data.student;
             console.log("success");
+            console.log(response);
         }
     });
 

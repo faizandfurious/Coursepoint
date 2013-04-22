@@ -8,8 +8,8 @@ var mongo = require('mongodb');
 var host = 'localhost';
 var port = mongo.Connection.DEFAULT_PORT;
 
-var optionsWithEnableWriteAccess = { w: 1 };
-var dbName = 'testDb';
+var optionsWithEnableWriteAccess = { w: 1, r:1 };
+var dbName = 'test';
 var studentCollection;
 var courseCollection;
 
@@ -86,15 +86,15 @@ app.post("/course", function(request, response) {
 
 app.post("/student", function(request, response) {
     var username = request.body.username;
-    // var student = studentCollection.findOne({username : username});
+    studentCollection.insert({username : username}, function (err) { });
+    var student = studentCollection.findOne({});
     
-    // var data = {student : student};
-    var courses = [1, 2];
-    var student = {"name" : "Faiz",
-                    "courses" : courses,
-                    };
+    //var courses = [1, 2];
+    //var student = {"name" : "Faiz",
+    //                "courses" : courses,
+    //                };
     response.send({
-        data : student,
+        data : {student : student},
         success : true
     });
         
