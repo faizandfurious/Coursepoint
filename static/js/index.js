@@ -103,10 +103,10 @@ $("#logout_button").click(function(){
 function toggleMenu(){
     menuOpen = !menuOpen;
     if (menuOpen){
-        $("#menu").animate({left:0});
+        $("#menu").animate({right:0});
     }
     else{
-        $("#menu").animate({left:-230});
+        $("#menu").animate({right:-230});
     }
 }
 
@@ -155,6 +155,7 @@ $("#sign_in_button").click(function(){
         loadStudentData(values["username"]);
         console.log("test");
         showClass();
+        $("#user_name_item").html(values["username"]);
     }
 });
 
@@ -202,12 +203,15 @@ function getData(){
 }
 
 function refreshCourseList(student) {
-    student["courses"].forEach( function (course) {
-        var classli = $('<li>').html("");;
+    for(var i = 0; i < 4; i++){
+        var classli = $('<li>').html("");
         classli.addClass("class grey_drop");
         classli.append($('<span>').html("").addClass("class_image"));
-        classli.append($('<span>').html(course["name"]).addClass("class_name"));
+        classli.append($('<span>').html("Test " + i).addClass("class_name"));
+        classli.append($('<span>').html("Test " + i).addClass("class_location"));
+        classli.append($('<span>').html("Test " + i).addClass("class_time"));
+        classli.append($('<span>').html("").addClass("arrow"));
         $("#classes").append(classli);
-    });
+    }
 
 }
