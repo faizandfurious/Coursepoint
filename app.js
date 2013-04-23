@@ -118,8 +118,17 @@ app.post("/student", function(request, response) {
 */
     var query = {username : username};
     studentCollection.insert(query, logDoc);
+    var student;
 
-    var student = studentCollection.findOne(query, logDoc);
+    studentCollection.findOne(query, function(err, doc){
+        if(err)
+            throw err;
+        student = doc;
+        response.send({
+            data : {student : student},
+            success : true
+        });
+    });
 
     var students = studentCollection.find().each(logDoc);
     
@@ -127,10 +136,7 @@ app.post("/student", function(request, response) {
     //var student = {"name" : "Faiz",
     //                "courses" : courses,
     //                };
-    response.send({
-        data : {student : student},
-        success : true
-    });
+
         
 });
 
