@@ -125,6 +125,18 @@ $("#0").click(function(){
 
 });
 
+//This method shows which answer was selected, and adds feedback to the UI.
+$(".quiz_answer").click(function(){
+    var selected_id = $(this).attr("id");
+    var siblings = $(this).parent().children();
+    siblings.css({'background-color':'#eeeeee',
+                'color':'#333'});
+    $(this).css({'background-color':'#727272',
+                'color':'#ffffff'});
+
+    console.log("Answer chosen is " + selected_id);
+});
+
 
 //THIS CODE IS FOR THE LOGIN PAGE
 $("#sign_in_button").click(function(){
