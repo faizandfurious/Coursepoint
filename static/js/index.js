@@ -81,6 +81,7 @@ function showQuiz(){
     quiz_page.show();
     login_page.hide();
     showTopbarButtons();
+    add_class_button.hide();
     addGradientToBody();
 }
 
@@ -123,6 +124,18 @@ $("#0").click(function(){
 
     showQuiz();
 
+});
+
+//This method shows which answer was selected, and adds feedback to the UI.
+$(".quiz_answer").click(function(){
+    var selected_id = $(this).attr("id");
+    var siblings = $(this).parent().children();
+    siblings.css({'background-color':'#eeeeee',
+                'color':'#333'});
+    $(this).css({'background-color':'#727272',
+                'color':'#ffffff'});
+
+    console.log("Answer chosen is " + selected_id);
 });
 
 

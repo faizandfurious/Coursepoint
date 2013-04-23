@@ -36,6 +36,16 @@ io.sockets.on("connection", function(socket) {
     });
 });
 
+var logger = function(error, result){
+    if (error)
+        throw error;
+    console.log(result);
+}
+
+var logDoc = logger;
+var logDocs = logger;
+
+
 // This is for serving files in the static directory
 app.get("/static/:staticFilename", function (request, response) {
     response.sendfile("static/" + request.params.staticFilename);
@@ -97,6 +107,7 @@ app.post("/course", function(request, response) {
 
 app.post("/student", function(request, response) {
     var username = request.body.username;
+/*    
     var student;
     studentCollection.insert({username : username}, function (err) { });
     var a = studentCollection.find().toArray(
@@ -104,7 +115,14 @@ app.post("/student", function(request, response) {
             console.log(docs);
             student = jsonify(docs[0]);
             });
+*/
+    var query = {username : username};
+    studentCollection.insert(query, logDoc);
 
+    var student = studentCollection.findOne(query, logDoc);
+
+    var students = studentCollection.find().each(logDoc);
+    
     //var courses = [1, 2];
     //var student = {"name" : "Faiz",
     //                "courses" : courses,
