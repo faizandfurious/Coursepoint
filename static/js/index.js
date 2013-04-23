@@ -115,14 +115,14 @@ $("#add_class_button").click(function(){
     console.log("add class button clicked");
 });
 
-$("#0").click(function(){
-    console.log("test");
+$(".class_item").click(function(){
+    name = $(this).attr(id);
+    console.log(name);
     //Put in request to get class information
-    getClass(0);
+    getClass(name);
 
 
     showQuiz();
-
 });
 
 //This method shows which answer was selected, and adds feedback to the UI.
@@ -184,7 +184,7 @@ function loadStudentData (username) {
 function getClass(id){
     $.ajax({
         type: "get",
-        url:"/get_class/" + id,
+        url:"/course/" + id,
         success: function(data){
             console.log(data);
         }
@@ -204,7 +204,7 @@ function getData(){
 
 function refreshCourseList(student) {
     for(var i = 0; i < 4; i++){
-        var classli = $('<li>').html("");
+        var classli = $('<li>').html("").addClass("class_item").attr("id","calculus");
         classli.addClass("class grey_drop");
         classli.append($('<span>').html("").addClass("class_image"));
         classli.append($('<span>').html("Test " + i).addClass("class_name"));
@@ -212,6 +212,13 @@ function refreshCourseList(student) {
         classli.append($('<span>').html("Test " + i).addClass("class_time"));
         classli.append($('<span>').html("").addClass("arrow"));
         $("#classes").append(classli);
+        classli.click(function(){
+            name = $(this).attr("id");
+            console.log(name);
+            //Put in request to get class information
+            getClass(name);
+            showQuiz();
+        });
     }
 
 }
