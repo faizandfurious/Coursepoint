@@ -60,6 +60,8 @@ function initializeDB(){
             });
         }
     });
+    console.log("Done adding");
+    courseCollection.find().each(logDoc);
 }
 
 
@@ -122,6 +124,15 @@ app.post("/course", function(request, response) {
     });
         
 });
+//Get all courses
+app.get("/courses", function(request, response) {
+    var name = request.params.name;
+    console.log(name);
+    var waiting = true;
+    var courses = [];
+    var courses = courseCollection.find();
+    
+});
 
 app.get("/course/:name", function(request, response) {
     var name = request.params.name;
@@ -130,11 +141,10 @@ app.get("/course/:name", function(request, response) {
         if(err)
             throw err;
         console.log(doc);
-    })
-    data = name;
-    response.send({
-        data : data,
-        success : true
+        response.send({
+            data : doc,
+            success : true
+        });
     });
 });
 

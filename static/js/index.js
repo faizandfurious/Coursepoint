@@ -175,7 +175,7 @@ function loadStudentData (username) {
             refreshCourseList(student);
         }
     });
-
+    getCourses();
   
 }
 
@@ -188,7 +188,7 @@ function getClass(id){
         success: function(data){
             console.log(data);
         }
-    })
+    });
 }
 
 //Get all the data
@@ -202,9 +202,19 @@ function getData(){
     });
 }
 
+function getCourses(){
+    $.ajax({
+        type: "get",
+        url:"/courses",
+        success: function(data){
+            console.log(data);
+        }
+    });
+}
+
 function refreshCourseList(student) {
     for(var i = 0; i < 4; i++){
-        var classli = $('<li>').html("").addClass("class_item").attr("id","calculus");
+        var classli = $('<li>').html("").addClass("class_item").attr("id","Calculus");
         classli.addClass("class grey_drop");
         classli.append($('<span>').html("").addClass("class_image"));
         classli.append($('<span>').html("Test " + i).addClass("class_name"));
