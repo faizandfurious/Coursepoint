@@ -41,14 +41,16 @@ function initializeDB(){
         if(doc === null){
             courseCollection.insert(calculus, function (err, doc) {
 
-            });
+            })
         }
-    }
+    });
+
     var mobile = {
         name : 'Mobile Web Apps',
         location : 'DH 1310',
         time : '3:00pm'
-    };
+    }
+
     courseCollection.findOne({name : 'Mobile Web Apps'}, function(err, doc){
         if(err)
             throw err;
@@ -57,7 +59,7 @@ function initializeDB(){
 
             });
         }
-    }
+    });
 }
 
 
@@ -129,7 +131,7 @@ app.get("/course/:name", function(request, response) {
             throw err;
         console.log(doc);
     })
-    data = id;
+    data = name;
     response.send({
         data : data,
         success : true
