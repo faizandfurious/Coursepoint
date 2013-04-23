@@ -104,10 +104,10 @@ $("#logout_button").click(function(){
 function toggleMenu(){
     menuOpen = !menuOpen;
     if (menuOpen){
-        $("#menu").animate({left:0});
+        $("#menu").animate({right:0});
     }
     else{
-        $("#menu").animate({left:-230});
+        $("#menu").animate({right:-230});
     }
 }
 

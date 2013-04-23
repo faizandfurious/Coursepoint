@@ -187,9 +187,9 @@ form:first-child{
 
 button#menu_button{
     position:absolute;
-    margin-left:7px;
+    margin-right:7px;
     margin-top:7px;
-    left:0px;
+    right:0px;
     width:35px;
     height:31px;
     background-image:url("images/menu_button.png");
@@ -208,9 +208,9 @@ button#menu_button:active, button#menu_button:focus{
 
 button#add_class_button{
     position:absolute;
-    margin-right:7px;
+    margin-left:7px;
     margin-top:7px;
-    right:0px;
+    left:0px;
     width:35px;
     height:31px;
     background-image:url("images/add_button.png");
@@ -272,13 +272,13 @@ button#add_class_button:active, button#add_class_button:focus{
   position: fixed;
   top: 44px;
   bottom: 0;
-  left: 0;
+  right: 0;
   width: 200px;
   z-index: 98;
   -webkit-box-shadow: 0 0 20px rgba(0,0,0,.76);
   -moz-box-shadow: 0 0 20px rgba(0,0,0,.76);
   box-shadow: 0 0 20px rgba(0,0,0,.76);
-  left: -230px;
+  right: -230px;
 }
 
 #menu .item{
