@@ -4,6 +4,7 @@ var class_list_page = $("#class_list_content");
 var quiz_page = $("#quiz_content");
 var menu_button = $("#menu_button");
 var add_class_button = $("#add_class_button");
+var looking_at_quiz = false;
 
 // BIND MENU ACTIONS
 var menuOpen = false;
@@ -72,6 +73,7 @@ function showClass(){
     quiz_page.hide();
     login_page.hide();
     showTopbarButtons();
+    add_class_button.hide();
     addGradientToBody();
 }
 
@@ -81,7 +83,6 @@ function showQuiz(){
     quiz_page.show();
     login_page.hide();
     showTopbarButtons();
-    add_class_button.hide();
     addGradientToBody();
 }
 
@@ -113,7 +114,7 @@ function toggleMenu(){
 
 
 $("#add_class_button").click(function(){
-    console.log("add class button clicked");
+    showClass();
 });
 
 $("#0").click(function(){
