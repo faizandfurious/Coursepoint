@@ -1,4 +1,3 @@
-
 var login_page = $("#login_content");
 var class_list_page = $("#class_list_content");
 var quiz_page = $("#quiz_content");
@@ -104,10 +103,10 @@ $("#logout_button").click(function(){
 function toggleMenu(){
     menuOpen = !menuOpen;
     if (menuOpen){
-        $("#menu").animate({right:0});
+        $("#menu").animate({left:0});
     }
     else{
-        $("#menu").animate({right:-230});
+        $("#menu").animate({left:-230});
     }
 }
 
@@ -153,10 +152,7 @@ $("#sign_in_button").click(function(){
     });
 
     if(login_successful){
-        console.log("test");
-        console.log(values["username"]);
         loadStudentData(values["username"]);
-        $("#user_name_item").html(values["username"]);
         console.log("test");
         showClass();
     }
@@ -174,29 +170,12 @@ function loadStudentData (username) {
         success: function(response){
             student = response.data.student;
             console.log("success");
-            console.log(response);
+            console.log(student);
+            refreshCourseList(student);
         }
     });
-    console.log(student);
 
-    courses = [];
-    if(student !== undefined){
-        if(student.courses !== undefined){
-            student.courses.forEach(function(id) {
-                $.ajax({
-                    type: "post",
-                    url: "/course",
-                    data: {id : id},
-                    success: function(data){
-                        courses.push(data.course);
-                    }
-                });
-            });
-        }
-        console.log("working");
-    }
-    console.log("courses");
-    console.log(courses);
+  
 }
 
 //ROUTES FOR DATA AND STUFF
@@ -220,4 +199,15 @@ function getData(){
             console.log(data);
         }
     });
+}
+
+function refreshCourseList(student) {
+    student["courses"].forEach( function (course) {
+        var classli = $('<li>').html("");;
+        classli.addClass("class grey_drop");
+        classli.append($('<span>').html("").addClass("class_image"));
+        classli.append($('<span>').html(course["name"]).addClass("class_name"));
+        $("#classes").append(classli);
+    });
+
 }

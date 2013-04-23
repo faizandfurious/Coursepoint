@@ -77,22 +77,10 @@ app.get("/static/js/:staticFilename", function (request, response) {
     response.sendfile("static/js/" + request.params.staticFilename);
 });
 
-function jsonify(doc) {
-     
-    var s = doc["username"];
-    console.log("***************"+s+"*************");
-    return s;
-}
-
 //COURSE ROUTES
 
 app.post("/course", function(request, response) {
     var id = request.body.id;
-    // var course = courseCollection.findOne({id : id}, function(err, doc){
-    //     if(err)
-    //         throw(err);
-    //     console.log(doc);
-    // });
     var course = {"Subject" : "Calculus"};
     var data = {course : course};
     response.send({
@@ -107,27 +95,26 @@ app.post("/course", function(request, response) {
 
 app.post("/student", function(request, response) {
     var username = request.body.username;
-/*    
-    var student;
-    studentCollection.insert({username : username}, function (err) { });
-    var a = studentCollection.find().toArray(
-        function(err,docs) {
-            console.log(docs);
-            student = jsonify(docs[0]);
-            });
-*/
     var query = {username : username};
-    studentCollection.insert(query, logDoc);
     var student;
 
     studentCollection.findOne(query, function(err, doc){
         if(err)
             throw err;
-        student = doc;
-        response.send({
-            data : {student : student},
-            success : true
-        });
+        if(doc === null){
+            studentCollection.insert({username : username}, function (err, doc) {
+                response.send({
+                    data : {student : doc},
+                    success : true
+                });
+            });
+        }
+        else{
+            response.send({
+                data : {student : doc},
+                success : true
+            });
+        }
     });
 
     var students = studentCollection.find().each(logDoc);
