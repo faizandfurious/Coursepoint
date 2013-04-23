@@ -214,18 +214,20 @@ function getCourses(){
 }
 
 function addCourse(){
+    console.log(student._id);
     $.ajax({
         type: "post",
         data: {student_id : student._id,
                 course_id : 1},
         url: "/add_course",
         success: function(data){
-            console.log(data);
+            refreshCourseList();
         }
     })
 }
 
 function refreshCourseList() {
+    console.log("refreshed");
     if(student["courses"] === undefined)
         return;
 

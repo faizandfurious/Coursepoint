@@ -61,7 +61,7 @@ function initializeDB(){
             });
         }
     });
-    console.log("Done adding");
+    // console.log("Done adding");
     courseCollection.find().each(logDoc);
 }
 
@@ -74,9 +74,9 @@ io.sockets.on("connection", function(socket) {
 });
 
 var logger = function(error, result){
-    if (error)
-        throw error;
-    console.log(result);
+    // if (error)
+    //     throw error;
+    // console.log(result);
 }
 
 var logDoc = logger;
@@ -128,7 +128,7 @@ app.post("/course", function(request, response) {
 //Get all courses
 app.get("/courses", function(request, response) {
     var name = request.params.name;
-    console.log(name);
+    // console.log(name);
     var waiting = true;
     var courses = [];
     var courses = courseCollection.find();
@@ -137,11 +137,11 @@ app.get("/courses", function(request, response) {
 
 app.get("/course/:name", function(request, response) {
     var name = request.params.name;
-    console.log(name);
+    // console.log(name);
     courseCollection.findOne({name : name}, function(err, doc){
         if(err)
             throw err;
-        console.log(doc);
+        // console.log(doc);
         response.send({
             data : doc,
             success : true
@@ -189,6 +189,7 @@ app.post("/student", function(request, response) {
 //Assume POST: Student ID and Course ID
 
 app.post("/add_course", function(request, response){
+    console.log(request.body.student_id);
     var student_id = toBSONID(request.body.student_id);
     var course_id = request.body.course_id;
     console.log(student_id + ", " + course_id);
@@ -207,24 +208,21 @@ app.post("/add_course", function(request, response){
             if(courses.indexOf(course_id) === -1){
                 courses.push(course_id);
                 var partialUpdate = { $set: { courses: courses } };
-                //Partially update student to include the new course
-                studentCollection.update(query, partialUpdate, function checkError(error, doc){
+                //Partially update student to include the new course. Since this is an async
+                //task, we place the response in the callback
+                studentCollection.update(query, partialUpdate, function(error, doc){
                     if (error)
                         throw error;
-                    console.log("student");
+                    response.send({
+                        student : doc,
+                        success : true
+                    });
+                    console.log("Added");
+
                 });
             }
             //Otherwise, do nothing.
         }
-        //Print this student again to check for update.
-        studentCollection.findOne(query, function(err, doc){
-            if(err)
-                throw err;
-            if(doc){
-                console.log("student");
-                console.log(doc);
-            }
-        });
     });
 });
 
