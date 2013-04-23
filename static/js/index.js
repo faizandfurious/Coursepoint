@@ -153,7 +153,10 @@ $("#sign_in_button").click(function(){
     });
 
     if(login_successful){
+        console.log("test");
+        console.log(values["username"]);
         loadStudentData(values["username"]);
+        $("#user_name_item").html(values["username"]);
         console.log("test");
         showClass();
     }
@@ -174,20 +177,26 @@ function loadStudentData (username) {
             console.log(response);
         }
     });
+    console.log(student);
 
     courses = [];
     if(student !== undefined){
-        student.courses.forEach(function(id) {
-            $.ajax({
-                type: "post",
-                url: "/course",
-                data: {id : id},
-                success: function(data){
-                    courses.push(data.course);
-                }
+        if(student.courses !== undefined){
+            student.courses.forEach(function(id) {
+                $.ajax({
+                    type: "post",
+                    url: "/course",
+                    data: {id : id},
+                    success: function(data){
+                        courses.push(data.course);
+                    }
+                });
             });
-        });
-    }   
+        }
+        console.log("working");
+    }
+    console.log("courses");
+    console.log(courses);
 }
 
 //ROUTES FOR DATA AND STUFF

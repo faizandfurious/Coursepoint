@@ -279,6 +279,7 @@ button#add_class_button:active, button#add_class_button:focus{
   -moz-box-shadow: 0 0 20px rgba(0,0,0,.76);
   box-shadow: 0 0 20px rgba(0,0,0,.76);
   right: -230px;
+  text-align: center;
 }
 
 #menu .item{
@@ -290,6 +291,13 @@ button#add_class_button:active, button#add_class_button:focus{
     background-color:#E6E6E6;
     border-radius:6px;
     text-align:center;
+}
+
+#menu #user_name_item{
+    display:inline-block;
+    margin-top:20px;
+    color:#fff;
+    font-size:1.5em;
 }
 
 #menu .item.navigate{
