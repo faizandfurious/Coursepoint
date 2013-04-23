@@ -26,6 +26,40 @@ function onDbReady(error){
         throw error;
     studentCollection = client.collection('studentCollection');
     courseCollection = client.collection('courseCollection');
+    initializeDB();
+}
+
+function initializeDB(){
+    var calculus = {
+        name : 'Calculus',
+        location : 'Wean 4301',
+        time : '9:30am'
+    };
+    courseCollection.findOne({name : 'Calculus'}, function(err, doc){
+        if(err)
+            throw err;
+        if(doc === null){
+            courseCollection.insert(calculus, function (err, doc) {
+
+            })
+        }
+    });
+
+    var mobile = {
+        name : 'Mobile Web Apps',
+        location : 'DH 1310',
+        time : '3:00pm'
+    }
+
+    courseCollection.findOne({name : 'Mobile Web Apps'}, function(err, doc){
+        if(err)
+            throw err;
+        if(doc === null){
+            courseCollection.insert(mobile, function (err, doc) {
+
+            });
+        }
+    });
 }
 
 
@@ -81,13 +115,27 @@ app.get("/static/js/:staticFilename", function (request, response) {
 
 app.post("/course", function(request, response) {
     var id = request.body.id;
-    var course = {"Subject" : "Calculus"};
     var data = {course : course};
     response.send({
         data : data,
         success : true
     });
         
+});
+
+app.get("/course/:name", function(request, response) {
+    var name = request.params.name;
+    console.log(name);
+    courseCollection.findOne({name : name}, function(err, doc){
+        if(err)
+            throw err;
+        console.log(doc);
+    })
+    data = name;
+    response.send({
+        data : data,
+        success : true
+    });
 });
 
 
@@ -101,11 +149,20 @@ app.post("/student", function(request, response) {
     studentCollection.findOne(query, function(err, doc){
         if(err)
             throw err;
-        student = doc;
-        response.send({
-            data : {student : student},
-            success : true
-        });
+        if(doc === null){
+            studentCollection.insert({username : username}, function (err, doc) {
+                response.send({
+                    data : {student : doc},
+                    success : true
+                });
+            });
+        }
+        else{
+            response.send({
+                data : {student : doc},
+                success : true
+            });
+        }
     });
 
     var students = studentCollection.find().each(logDoc);
@@ -121,6 +178,7 @@ app.post("/student", function(request, response) {
 //QUIZ ROUTES
 
 function initServer() {
+
 }
 
 // Finally, initialize the server, then activate the server at port 8889

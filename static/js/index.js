@@ -1,4 +1,3 @@
-
 var login_page = $("#login_content");
 var class_list_page = $("#class_list_content");
 var quiz_page = $("#quiz_content");
@@ -104,10 +103,10 @@ $("#logout_button").click(function(){
 function toggleMenu(){
     menuOpen = !menuOpen;
     if (menuOpen){
-        $("#menu").animate({left:0});
+        $("#menu").animate({right:0});
     }
     else{
-        $("#menu").animate({left:-230});
+        $("#menu").animate({right:-230});
     }
 }
 
@@ -116,14 +115,14 @@ $("#add_class_button").click(function(){
     console.log("add class button clicked");
 });
 
-$("#0").click(function(){
-    console.log("test");
+$(".class_item").click(function(){
+    name = $(this).attr(id);
+    console.log(name);
     //Put in request to get class information
-    getClass(0);
+    getClass(name);
 
 
     showQuiz();
-
 });
 
 //This method shows which answer was selected, and adds feedback to the UI.
@@ -156,6 +155,7 @@ $("#sign_in_button").click(function(){
         loadStudentData(values["username"]);
         console.log("test");
         showClass();
+        $("#user_name_item").html(values["username"]);
     }
 });
 
@@ -171,8 +171,8 @@ function loadStudentData (username) {
         success: function(response){
             student = response.data.student;
             console.log("success");
-            console.log(response);
-            refreshCourseList();
+            console.log(student);
+            refreshCourseList(student);
         }
     });
 
@@ -184,7 +184,7 @@ function loadStudentData (username) {
 function getClass(id){
     $.ajax({
         type: "get",
-        url:"/get_class/" + id,
+        url:"/course/" + id,
         success: function(data){
             console.log(data);
         }
@@ -202,13 +202,23 @@ function getData(){
     });
 }
 
-function refreshCourseList() {
-    student["courses"].forEach( function (course) {
-        var classli = $('<li>').html("");;
+function refreshCourseList(student) {
+    for(var i = 0; i < 4; i++){
+        var classli = $('<li>').html("").addClass("class_item").attr("id","calculus");
         classli.addClass("class grey_drop");
         classli.append($('<span>').html("").addClass("class_image"));
-        classli.append($('<span>').html(course["name"]).addClass("class_name"));
+        classli.append($('<span>').html("Test " + i).addClass("class_name"));
+        classli.append($('<span>').html("Test " + i).addClass("class_location"));
+        classli.append($('<span>').html("Test " + i).addClass("class_time"));
+        classli.append($('<span>').html("").addClass("arrow"));
         $("#classes").append(classli);
-    });
+        classli.click(function(){
+            name = $(this).attr("id");
+            console.log(name);
+            //Put in request to get class information
+            getClass(name);
+            showQuiz();
+        });
+    }
 
 }
