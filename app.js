@@ -67,6 +67,13 @@ app.get("/static/js/:staticFilename", function (request, response) {
     response.sendfile("static/js/" + request.params.staticFilename);
 });
 
+function jsonify(doc) {
+     
+    var s = doc["username"];
+    console.log("***************"+s+"*************");
+    return s;
+}
+
 //COURSE ROUTES
 
 app.post("/course", function(request, response) {
@@ -90,13 +97,14 @@ app.post("/course", function(request, response) {
 
 app.post("/student", function(request, response) {
     var username = request.body.username;
+    var student;
     studentCollection.insert({username : username}, function (err) { });
-    var student = studentCollection.findOne({}, function(err, doc){
-        if(err)
-            throw(err);
-        console.log(doc);
-    });
-    
+    var a = studentCollection.find().toArray(
+        function(err,docs) {
+            console.log(docs);
+            student = jsonify(docs[0]);
+            });
+
     //var courses = [1, 2];
     //var student = {"name" : "Faiz",
     //                "courses" : courses,
