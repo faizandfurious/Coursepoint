@@ -12,6 +12,7 @@ var optionsWithEnableWriteAccess = { w: 1, r:1 };
 var dbName = 'test';
 var studentCollection;
 var courseCollection;
+var BSON = require('mongodb').BSONPure; //For ID searching
 
 var client = new mongo.Db(
     dbName,
@@ -185,10 +186,56 @@ app.post("/student", function(request, response) {
         
 });
 
+//Assume POST: Student ID and Course ID
+
+app.post("/add_course", function(request, response){
+    var student_id = toBSONID(request.body.student_id);
+    var course_id = request.body.course_id;
+    console.log(student_id + ", " + course_id);
+    var query = {_id : student_id};
+    studentCollection.findOne(query, function(err, doc){
+        if(err)
+            throw err;
+        if(doc){
+            if(doc.courses){
+                var courses = doc.courses;
+            }
+            else{
+                var courses = [];
+            }
+
+            if(courses.indexOf(course_id) === -1){
+                courses.push(course_id);
+                var partialUpdate = { $set: { courses: courses } };
+                //Partially update student to include the new course
+                studentCollection.update(query, partialUpdate, function checkError(error, doc){
+                    if (error)
+                        throw error;
+                    console.log("student");
+                });
+            }
+            //Otherwise, do nothing.
+        }
+        //Print this student again to check for update.
+        studentCollection.findOne(query, function(err, doc){
+            if(err)
+                throw err;
+            if(doc){
+                console.log("student");
+                console.log(doc);
+            }
+        });
+    });
+});
+
 //QUIZ ROUTES
 
 function initServer() {
 
+}
+
+function toBSONID(hexCode){
+    return BSON.ObjectID.createFromHexString(hexCode);
 }
 
 // Finally, initialize the server, then activate the server at port 8889

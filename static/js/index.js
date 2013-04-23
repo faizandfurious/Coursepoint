@@ -113,6 +113,7 @@ function toggleMenu(){
 
 $("#add_class_button").click(function(){
     console.log("add class button clicked");
+    addCourse();
 });
 
 $(".class_item").click(function(){
@@ -172,10 +173,10 @@ function loadStudentData (username) {
             student = response.data.student;
             console.log("success");
             console.log(student);
-            refreshCourseList(student);
+            refreshCourseList();
         }
     });
-    getCourses();
+    // getCourses();
   
 }
 
@@ -212,7 +213,42 @@ function getCourses(){
     });
 }
 
-function refreshCourseList(student) {
+function addCourse(){
+    $.ajax({
+        type: "post",
+        data: {student_id : student._id,
+                course_id : 1},
+        url: "/add_course",
+        success: function(data){
+            console.log(data);
+        }
+    })
+}
+
+function refreshCourseList() {
+    if(student["courses"] === undefined)
+        return;
+
+    student["courses"].forEach( function(course) {
+        var classli = $('<li>').html("").addClass("class_item").attr("id","calculus");
+        classli.addClass("class grey_drop");
+        classli.append($('<span>').html("").addClass("class_image"));
+        classli.append($('<span>').html(course["name"]).addClass("class_name"));
+        classli.append($('<span>').html(course["location"]).addClass("class_location"));
+        classli.append($('<span>').html(course["time"]).addClass("class_time"));
+        classli.append($('<span>').html("").addClass("arrow"));
+        $("#classes").append(classli);
+        classli.click(function(){
+            name = $(this).attr("id");
+            console.log(name);
+            //Put in request to get class information
+            getClass(name);
+            showQuiz();
+        });
+
+    });
+
+/*
     for(var i = 0; i < 4; i++){
         var classli = $('<li>').html("").addClass("class_item").attr("id","Calculus");
         classli.addClass("class grey_drop");
@@ -230,5 +266,5 @@ function refreshCourseList(student) {
             showQuiz();
         });
     }
-
+*/
 }
