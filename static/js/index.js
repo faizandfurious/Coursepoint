@@ -172,22 +172,11 @@ function loadStudentData (username) {
             student = response.data.student;
             console.log("success");
             console.log(response);
+            refreshCourseList();
         }
     });
 
-    courses = [];
-    if(student !== undefined){
-        student.courses.forEach(function(id) {
-            $.ajax({
-                type: "post",
-                url: "/course",
-                data: {id : id},
-                success: function(data){
-                    courses.push(data.course);
-                }
-            });
-        });
-    }   
+  
 }
 
 //ROUTES FOR DATA AND STUFF
@@ -211,4 +200,15 @@ function getData(){
             console.log(data);
         }
     });
+}
+
+function refreshCourseList() {
+    student["courses"].forEach( function (course) {
+        var classli = $('<li>').html("");;
+        classli.addClass("class grey_drop");
+        classli.append($('<span>').html("").addClass("class_image"));
+        classli.append($('<span>').html(course["name"]).addClass("class_name"));
+        $("#classes").append(classli);
+    });
+
 }

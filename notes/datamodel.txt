@@ -12,7 +12,7 @@ student
     username (uid)
     password
     course[] (or array of course ids?)
-    responses[]
+    response[]
 
 course
     _id
@@ -23,14 +23,14 @@ question
     course_id
     question
     choices
-
-answerkey
+    answer
+    
+response
     _id
     course_id
-    
-responses
-    _id
     student_id
-    question_id
-    response
+    response{question_id : response}
+    answer{question_id : answer_id}
+    correct{question_id : bool}
+
 
