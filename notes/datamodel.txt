@@ -1,0 +1,36 @@
+collections: student, teacher, course, answerkey, responses
+
+teacher
+    _id
+    username (uid)
+    password
+    course[]
+    answerkey[]
+
+student
+    _id
+    username (uid)
+    password
+    course[] (or array of course ids?)
+    responses[]
+
+course
+    _id
+    coursename
+
+question
+    _id
+    course_id
+    question
+    choices
+
+answerkey
+    _id
+    course_id
+    
+responses
+    _id
+    student_id
+    question_id
+    response
+
