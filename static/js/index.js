@@ -81,6 +81,7 @@ function showQuiz(){
     quiz_page.show();
     login_page.hide();
     showTopbarButtons();
+    add_class_button.hide();
     addGradientToBody();
 }
 
