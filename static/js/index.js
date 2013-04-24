@@ -187,7 +187,7 @@ function getClass(id){
         type: "get",
         url:"/course/" + id,
         success: function(data){
-            console.log(data);
+            return data;
         }
     });
 }
@@ -218,7 +218,7 @@ function addCourse(){
     $.ajax({
         type: "post",
         data: {student_id : student._id,
-                course_id : 1},
+                course_name : "Calculus"},
         url: "/add_course",
         success: function(data){
             refreshCourseList();
@@ -227,11 +227,11 @@ function addCourse(){
 }
 
 function refreshCourseList() {
-    console.log("refreshed");
     if(student["courses"] === undefined)
         return;
 
     student["courses"].forEach( function(course) {
+        console.log(getClass(course));
         var classli = $('<li>').html("").addClass("class_item").attr("id","calculus");
         classli.addClass("class grey_drop");
         classli.append($('<span>').html("").addClass("class_image"));

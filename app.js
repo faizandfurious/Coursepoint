@@ -221,6 +221,13 @@ app.post("/add_course", function(request, response){
 
                 });
             }
+            else{
+                response.send({
+                    student : doc,
+                    success : true
+                });
+
+            }
             //Otherwise, do nothing.
         }
     });
