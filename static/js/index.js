@@ -1,3 +1,4 @@
+var socket = io.connect("http://localhost:8888");
 var login_page = $("#login_content");
 var class_list_page = $("#class_list_content");
 var quiz_page = $("#quiz_content");
@@ -181,6 +182,16 @@ function loadStudentData (username) {
 }
 
 //ROUTES FOR DATA AND STUFF
+
+//SOCKET MESSAGES
+socket.on("newquestions", function(data) {
+    console.log("new socket message: "+data.qids);
+    var qids = [];
+    qids.push(data.qids);
+    getQuestions(qids);
+});
+
+
 //Get a specific class via the ID
 function getClass(id){
     $.ajax({
@@ -202,6 +213,21 @@ function getData(){
         }
     });
 }
+
+//takes an array of qid's and gets corresponding questions
+function getQuestions(questions) {
+    console.log("getting: "+questions);
+    $.ajax({
+        type:"post",
+        url:"/questions",
+        data:{questions : questions},
+        success: function(data){
+            console.log(data);
+            //handle questions here
+        }
+    });
+}
+
 
 function getCourses(){
     $.ajax({
@@ -250,23 +276,5 @@ function refreshCourseList() {
 
     });
 
-/*
-    for(var i = 0; i < 4; i++){
-        var classli = $('<li>').html("").addClass("class_item").attr("id","Calculus");
-        classli.addClass("class grey_drop");
-        classli.append($('<span>').html("").addClass("class_image"));
-        classli.append($('<span>').html("Test " + i).addClass("class_name"));
-        classli.append($('<span>').html("Test " + i).addClass("class_location"));
-        classli.append($('<span>').html("Test " + i).addClass("class_time"));
-        classli.append($('<span>').html("").addClass("arrow"));
-        $("#classes").append(classli);
-        classli.click(function(){
-            name = $(this).attr("id");
-            console.log(name);
-            //Put in request to get class information
-            getClass(name);
-            showQuiz();
-        });
-    }
-*/
+
 }
