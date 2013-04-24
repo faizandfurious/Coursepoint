@@ -69,10 +69,12 @@ function initializeDB(){
 
 
 io.sockets.on("connection", function(socket) {
-    socket.on('msg', function(data) {
+
+    socket.on('newquestions', function(data) {
         socket.emit('status', {success: 'true'});
-        io.sockets.emit('newmsg', {body: data.body});
+        io.sockets.emit('newquestions', {qids: data.qids});
     });
+
 });
 
 var logger = function(error, result){

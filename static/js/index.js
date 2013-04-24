@@ -1,3 +1,4 @@
+var socket = io.connect("http://localhost:8888");
 var login_page = $("#login_content");
 var class_list_page = $("#class_list_content");
 var quiz_page = $("#quiz_content");
@@ -181,6 +182,16 @@ function loadStudentData (username) {
 }
 
 //ROUTES FOR DATA AND STUFF
+
+//SOCKET MESSAGES
+socket.on("newquestions", function(data) {
+    console.log("new socket message: "+data.qids);
+    var qids = [];
+    qids.push(data.qids);
+    getQuestions(qids);
+});
+
+
 //Get a specific class via the ID
 function getClass(id){
     $.ajax({
@@ -205,6 +216,7 @@ function getData(){
 
 //takes an array of qid's and gets corresponding questions
 function getQuestions(questions) {
+    console.log("getting: "+questions);
     $.ajax({
         type:"post",
         url:"/questions",
