@@ -113,6 +113,7 @@ function toggleMenu(){
 
 $("#add_class_button").click(function(){
     console.log("add class button clicked");
+    addCourse();
 });
 
 $(".class_item").click(function(){
@@ -175,7 +176,7 @@ function loadStudentData (username) {
             refreshCourseList();
         }
     });
-
+    // getCourses();
   
 }
 
@@ -188,7 +189,7 @@ function getClass(id){
         success: function(data){
             console.log(data);
         }
-    })
+    });
 }
 
 //Get all the data
@@ -202,6 +203,7 @@ function getData(){
     });
 }
 
+//takes an array of qid's and gets corresponding questions
 function getQuestions(questions) {
     $.ajax({
         type:"post",
@@ -209,11 +211,37 @@ function getQuestions(questions) {
         data:{questions : questions},
         success: function(data){
             console.log(data);
+            //handle questions here
         }
     });
 }
 
+
+function getCourses(){
+    $.ajax({
+        type: "get",
+        url:"/courses",
+        success: function(data){
+            console.log(data);
+        }
+    });
+}
+
+function addCourse(){
+    console.log(student._id);
+    $.ajax({
+        type: "post",
+        data: {student_id : student._id,
+                course_id : 1},
+        url: "/add_course",
+        success: function(data){
+            refreshCourseList();
+        }
+    })
+}
+
 function refreshCourseList() {
+    console.log("refreshed");
     if(student["courses"] === undefined)
         return;
 
@@ -235,4 +263,6 @@ function refreshCourseList() {
         });
 
     });
+
+
 }

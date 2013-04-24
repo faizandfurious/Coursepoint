@@ -13,6 +13,7 @@ var dbName = 'test';
 var questionCollection;
 var studentCollection;
 var courseCollection;
+var BSON = require('mongodb').BSONPure; //For ID searching
 
 var client = new mongo.Db(
     dbName,
@@ -62,6 +63,8 @@ function initializeDB(){
             });
         }
     });
+    // console.log("Done adding");
+    courseCollection.find().each(logDoc);
 }
 
 
@@ -73,9 +76,9 @@ io.sockets.on("connection", function(socket) {
 });
 
 var logger = function(error, result){
-    if (error)
-        throw error;
-    console.log(result);
+    // if (error)
+    //     throw error;
+    // console.log(result);
 }
 
 var logDoc = logger;
@@ -124,19 +127,27 @@ app.post("/course", function(request, response) {
     });
         
 });
+//Get all courses
+app.get("/courses", function(request, response) {
+    var name = request.params.name;
+    // console.log(name);
+    var waiting = true;
+    var courses = [];
+    var courses = courseCollection.find();
+    
+});
 
 app.get("/course/:name", function(request, response) {
     var name = request.params.name;
-    console.log(name);
+    // console.log(name);
     courseCollection.findOne({name : name}, function(err, doc){
         if(err)
             throw err;
-        console.log(doc);
-    })
-    data = name;
-    response.send({
-        data : data,
-        success : true
+        // console.log(doc);
+        response.send({
+            data : doc,
+            success : true
+        });
     });
 });
 
@@ -211,8 +222,54 @@ function getQuestions(questions, docs, response) {
 
 }
 
+//Assume POST: Student ID and Course ID
+
+app.post("/add_course", function(request, response){
+    console.log(request.body.student_id);
+    var student_id = toBSONID(request.body.student_id);
+    var course_id = request.body.course_id;
+    console.log(student_id + ", " + course_id);
+    var query = {_id : student_id};
+    studentCollection.findOne(query, function(err, doc){
+        if(err)
+            throw err;
+        if(doc){
+            if(doc.courses){
+                var courses = doc.courses;
+            }
+            else{
+                var courses = [];
+            }
+
+            if(courses.indexOf(course_id) === -1){
+                courses.push(course_id);
+                var partialUpdate = { $set: { courses: courses } };
+                //Partially update student to include the new course. Since this is an async
+                //task, we place the response in the callback
+                studentCollection.update(query, partialUpdate, function(error, doc){
+                    if (error)
+                        throw error;
+                    response.send({
+                        student : doc,
+                        success : true
+                    });
+                    console.log("Added");
+
+                });
+            }
+            //Otherwise, do nothing.
+        }
+    });
+});
+
+//QUIZ ROUTES
+
 function initServer() {
 
+}
+
+function toBSONID(hexCode){
+    return BSON.ObjectID.createFromHexString(hexCode);
 }
 
 // Finally, initialize the server, then activate the server at port 8889
