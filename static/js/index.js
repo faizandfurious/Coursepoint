@@ -202,6 +202,17 @@ function getData(){
     });
 }
 
+function getQuestions(questions) {
+    $.ajax({
+        type:"post",
+        url:"/questions",
+        data:{questions : questions},
+        success: function(data){
+            console.log(data);
+        }
+    });
+}
+
 function refreshCourseList() {
     if(student["courses"] === undefined)
         return;
@@ -224,24 +235,4 @@ function refreshCourseList() {
         });
 
     });
-
-/*
-    for(var i = 0; i < 4; i++){
-        var classli = $('<li>').html("").addClass("class_item").attr("id","calculus");
-        classli.addClass("class grey_drop");
-        classli.append($('<span>').html("").addClass("class_image"));
-        classli.append($('<span>').html("Test " + i).addClass("class_name"));
-        classli.append($('<span>').html("Test " + i).addClass("class_location"));
-        classli.append($('<span>').html("Test " + i).addClass("class_time"));
-        classli.append($('<span>').html("").addClass("arrow"));
-        $("#classes").append(classli);
-        classli.click(function(){
-            name = $(this).attr("id");
-            console.log(name);
-            //Put in request to get class information
-            getClass(name);
-            showQuiz();
-        });
-    }
-*/
 }

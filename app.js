@@ -10,6 +10,7 @@ var port = mongo.Connection.DEFAULT_PORT;
 
 var optionsWithEnableWriteAccess = { w: 1, r:1 };
 var dbName = 'test';
+var questionCollection;
 var studentCollection;
 var courseCollection;
 
@@ -24,6 +25,7 @@ client.open(onDbReady);
 function onDbReady(error){
     if (error)
         throw error;
+    questionCollection = client.collection('questionCollection');
     studentCollection = client.collection('studentCollection');
     courseCollection = client.collection('courseCollection');
     initializeDB();
@@ -175,7 +177,39 @@ app.post("/student", function(request, response) {
         
 });
 
-//QUIZ ROUTES
+//QUESTIONS ROUTES
+
+//take array of question _id's and return questions and choices
+app.post("/questions", function(request, response) {
+    var questions = request.body.questions;
+    var docs = [];
+    console.log(questions);
+
+    docs = getQuestions(questions, docs, response);
+    console.log("docs: "+docs);
+
+    
+        
+});
+
+function getQuestions(questions, docs, response) {
+    if(questions.length === 0) {
+        response.send({
+            data : {questions: docs},
+            success : true
+        });
+    }
+
+    var qid = questions.shift();
+    questionCollection.findOne({qid : qid}, function(err, doc) {
+        if(err)
+            throw err;
+        docs.push(doc);
+        return getQuestions(questions, docs, response);
+        
+    });
+
+}
 
 function initServer() {
 
