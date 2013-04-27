@@ -242,15 +242,15 @@ app.post("/add_course", function(request, response){
     var course_query = {_id : course_id};
 
     //Find the student via the providede student_id
-    studentCollection.findOne(query, function(err, doc){
+    studentCollection.findOne(query, function(err, student){
         if(err)
             throw err;
         //if we found the student, attempt to add the course to the student document
-        if(doc){
-            console.log(doc);
+        if(student){
+            console.log(student);
             //Ensure that the courses array in student exists. If not, create it.
-            if(doc.courses){
-                var courses = doc.courses;
+            if(student.courses){
+                var courses = student.courses;
             }
             else{
                 var courses = [];
@@ -267,7 +267,8 @@ app.post("/add_course", function(request, response){
                     //We search through the courses array of the student document to try to find
                     //the course in question. If we find it, we do nothing. Otherwise we add the course
                     //document courses array in the student document.
-                    if(courses.indexOf(course_doc) === -1){
+                    if(!courseExistsInStudent(course_doc, student)){
+                        console.log("going to add");
                         //We push the course document to the courses array, and then do a partial update
                         //of the student document.
                         courses.push(course_doc);
@@ -299,6 +300,21 @@ app.post("/add_course", function(request, response){
         }
     });
 });
+
+//This function checks to see if the course is already included in the student's course array.
+function courseExistsInStudent(course, student){
+    if(student.courses){
+    console.log("courses exist");
+        courses = student.courses;
+        for(var i = 0; i < courses.length; i++){
+            //Compare the string versions of the ids
+            if("" + courses[i]._id === "" + course._id){
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 //QUIZ ROUTES
 

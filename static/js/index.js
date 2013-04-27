@@ -250,7 +250,7 @@ function addCourse(){
     $.ajax({
         type: "post",
         data: {student_id : student._id,
-                course_id : "517c474385f704d063000001"},
+                course_id : "517c4c3658a0370a64000001"},
         url: "/add_course",
         success: function(data){
             console.log("updated");
