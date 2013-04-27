@@ -13,6 +13,7 @@ var courses;
 
 
 $(document).ready(function(){
+    getCourses();
     showLogin();
 });
 
@@ -257,22 +258,23 @@ function refreshCourseList() {
         return;
 
     student["courses"].forEach( function(course) {
-        console.log(getClass(course));
-        var classli = $('<li>').html("").addClass("class_item").attr("id","calculus");
-        classli.addClass("class grey_drop");
-        classli.append($('<span>').html("").addClass("class_image"));
-        classli.append($('<span>').html(course["name"]).addClass("class_name"));
-        classli.append($('<span>').html(course["location"]).addClass("class_location"));
-        classli.append($('<span>').html(course["time"]).addClass("class_time"));
-        classli.append($('<span>').html("").addClass("arrow"));
-        $("#classes").append(classli);
-        classli.click(function(){
-            name = $(this).attr("id");
-            console.log(name);
-            //Put in request to get class information
-            getClass(name);
-            showQuiz();
-        });
+        if(course){
+            var classli = $('<li>').html("").addClass("class_item").attr("id","calculus");
+            classli.addClass("class grey_drop");
+            classli.append($('<span>').html("").addClass("class_image"));
+            classli.append($('<span>').html(course["name"]).addClass("class_name"));
+            classli.append($('<span>').html(course["location"]).addClass("class_location"));
+            classli.append($('<span>').html(course["time"]).addClass("class_time"));
+            classli.append($('<span>').html("").addClass("arrow"));
+            $("#classes").append(classli);
+            classli.click(function(){
+                name = $(this).attr("id");
+                console.log(name);
+                //Put in request to get class information
+                getClass(name);
+                showQuiz();
+            });
+        }
 
     });
 
