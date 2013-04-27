@@ -172,6 +172,7 @@ function loadStudentData (username) {
         data: {username: username},
         url: "/student",
         success: function(response){
+            console.log(response);
             student = response.data.student;
             console.log("success");
             console.log(student);
@@ -235,29 +236,40 @@ function getCourses(){
         type: "get",
         url:"/courses",
         success: function(data){
-            console.log(data);
+            for(i in data.data){
+                console.log(data.data[i]);
+            }
+            courses = data.data;
         }
     });
 }
 
 function addCourse(){
+    console.log("student");
     console.log(student._id);
     $.ajax({
         type: "post",
         data: {student_id : student._id,
-                course_name : "Calculus"},
+                course_id : "517c474385f704d063000001"},
         url: "/add_course",
         success: function(data){
+            console.log("updated");
+            student = data.student;
             refreshCourseList();
+            console.log(data);
         }
     })
 }
 
 function refreshCourseList() {
+    if(!student)
+        return;
     if(student["courses"] === undefined)
         return;
 
+    $("#classes").html("");
     student["courses"].forEach( function(course) {
+        console.log("course: " + course);
         if(course){
             var classli = $('<li>').html("").addClass("class_item").attr("id","calculus");
             classli.addClass("class grey_drop");

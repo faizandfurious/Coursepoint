@@ -174,12 +174,13 @@ app.post("/student", function(request, response) {
         if(doc === null){
             studentCollection.insert({username : username}, function (err, doc) {
                 response.send({
-                    data : {student : doc},
+                    data : {student : doc[0]},
                     success : true
                 });
             });
         }
         else{
+            console.log(doc);
             response.send({
                 data : {student : doc},
                 success : true
@@ -234,7 +235,6 @@ function getQuestions(questions, docs, response) {
 //Assume POST: Student ID and Course ID
 
 app.post("/add_course", function(request, response){
-    console.log(request.body.student_id);
     var student_id = toBSONID(request.body.student_id);
     var course_id = toBSONID(request.body.course_id);
     console.log(student_id + ", " + course_id);
@@ -247,6 +247,7 @@ app.post("/add_course", function(request, response){
             throw err;
         //if we found the student, attempt to add the course to the student document
         if(doc){
+            console.log(doc);
             //Ensure that the courses array in student exists. If not, create it.
             if(doc.courses){
                 var courses = doc.courses;
@@ -266,19 +267,29 @@ app.post("/add_course", function(request, response){
                     //We search through the courses array of the student document to try to find
                     //the course in question. If we find it, we do nothing. Otherwise we add the course
                     //document courses array in the student document.
-                    if(courses.indexOf(doc) === -1){
+                    if(courses.indexOf(course_doc) === -1){
                         //We push the course document to the courses array, and then do a partial update
                         //of the student document.
-                        courses.push(doc);
+                        courses.push(course_doc);
                         var partialUpdate = { $set: { courses: courses } };
                         //Partially update student to include the new course. Since this is an async
                         //task, we place the response in the callback
                         studentCollection.update(query, partialUpdate, function(error, doc){
                             if (error)
                                 throw error;
-                            response.send({
-                                student : doc,
-                                success : true
+                            //If there's no error, we look for the student again, and if we do, send it back to the 
+                            //client with the updated version of the student.
+                            studentCollection.findOne(query, function(err, updated_student){
+                                if(err)
+                                    throw err;
+                                //if we found the student, attempt to add the course to the student document
+                                if(updated_student){
+                                    console.log(updated_student);
+                                    response.send({
+                                        student : updated_student,
+                                        success : true
+                                    });
+                                }
                             });
                         });
                     }
@@ -296,6 +307,7 @@ function initServer() {
 }
 
 function toBSONID(hexCode){
+    console.log(hexCode);
     return BSON.ObjectID.createFromHexString(hexCode);
 }
 
