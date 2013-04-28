@@ -3,7 +3,9 @@ var login_page = $("#login_content");
 var class_list_page = $("#class_list_content");
 var quiz_page = $("#quiz_content");
 var menu_button = $("#menu_button");
+var back_button = $("#back_button");
 var add_class_button = $("#add_class_button");
+var timer = $("#timer");
 
 // BIND MENU ACTIONS
 var menuOpen = false;
@@ -13,6 +15,7 @@ var courses;
 
 
 $(document).ready(function(){
+    hideTopbarButtons();
     refreshCourseList();
     getCourses();
     showLogin();
@@ -21,6 +24,8 @@ $(document).ready(function(){
 function hideTopbarButtons(){
     menu_button.hide();
     add_class_button.hide();
+    back_button.hide();
+    timer.css("visibility","hidden");
 }
 
 function showTopbarButtons(){
@@ -70,11 +75,14 @@ function addGradientToBody(){
 }
 
 function showClass(){
+    refreshCourseList();
     class_list_page.show();
     quiz_page.hide();
     login_page.hide();
     showTopbarButtons();
     addGradientToBody();
+    back_button.hide();
+    timer.css("visibility","hidden");
 }
 
 
@@ -85,6 +93,8 @@ function showQuiz(){
     showTopbarButtons();
     add_class_button.hide();
     addGradientToBody();
+    back_button.show();
+    timer.css("visibility","visible");
 }
 
 //THIS CODE IS FOR THE CLASS LIST PAGE
@@ -101,6 +111,10 @@ $("#logout_button").click(function(){
     toggleMenu();
     showLogin();
 });
+
+back_button.click(function(){
+    showClass();
+})
 
 
 function toggleMenu(){
@@ -305,6 +319,36 @@ function refreshCourseList() {
         }
 
     });
-
-
 }
+
+function startQuiz(time){
+    $("#timer").html("");
+    $("#timer").css("color","green");
+
+    var quizInterval = setInterval(function(){
+        if(time < 16){
+            $("#timer").css("color","red");
+        }
+        if(time <= 0){
+            clearInterval(quizInterval);
+        }
+        if(time > 59){
+            var min = Math.floor(time/60);
+            var sec = time%60;
+            if(sec < 10){
+                sec = "0" + sec;
+            }
+            $("#timer").html(min + ":" + sec);
+        }
+        else{
+            var sec = time%60;
+            if(sec < 10){
+                sec = "0" + sec;
+                console.log(sec);
+            }
+            $("#timer").html("0:" + sec);
+        }
+        time--;
+    }, 1000);
+}
+
