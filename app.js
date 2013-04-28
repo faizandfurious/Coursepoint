@@ -166,7 +166,6 @@ app.get("/course/:name", function(request, response) {
 app.post("/student", function(request, response) {
     var username = request.body.username;
     var query = {username : username};
-    var student;
 
     studentCollection.findOne(query, function(err, doc){
         if(err)
@@ -181,22 +180,86 @@ app.post("/student", function(request, response) {
         }
         else{
             console.log(doc);
-            response.send({
-                data : {student : doc},
-                success : true
-            });
+            constructStudent(doc, response);
+            
         }
     });
 
-    var students = studentCollection.find().each(logDoc);
-    
-    //var courses = [1, 2];
-    //var student = {"name" : "Faiz",
-    //                "courses" : courses,
-    //                };
-
-        
 });
+
+function Student(doc) {
+    this.username = doc["username"];
+    this.name = doc["name"];
+    this.courses = [];
+
+}
+
+function Course(doc) {
+    this.id = doc["course_id"];
+    this.name = doc["name"];
+    this.time = doc["time"];
+    this.location = doc["location"];
+    this.lectures = [];
+}
+
+function Lecture(doc) {
+    this.id = doc["lecture_id"];
+    this.name = doc["name"];
+    this.questions = [];
+}
+
+function Question(questionDoc, studentDoc) {
+    this.id = questionDoc["question_id"];
+    this.category = questionDoc["category"];
+    this.tags = questionDoc["tags"];
+    this.body = questionDoc["body"];
+    this.choices = questionDoc["choices"];
+    if(questionDoc["complete"] === true) {
+        this.studentAnswer = studentDoc["answers"][this.questionId];
+        this.complete = true;
+        this.correctAnswer = question["correctAnswer"];
+        this.explanation = question["explanation"];
+    } else {
+        this.complete = false;
+    }
+}
+
+function constructStudent(studentDoc, response) {
+    var student = new Student(studentDoc);
+    var course;
+    var leture;
+    var question;
+
+    //get each course
+    studentDoc["courses"].forEach( function(course_id) {
+        courseCollection.find({course_id : course_id}).toArray(function(err,courseDocs) { //get all courses
+            courseDocs.forEach(function(courseDoc) { 
+                course = new Course(courseDoc);
+                //get each lecture
+                lectureCollection.find({course_id : course.id}).toArray(function(err, lectureDocs) { //get all lectures in course
+                    lectureDocs.forEach(function(lectureDoc) {
+                        lecture = new Lecture(lectureDoc);
+                        questionCollection.find({lecture_id : lecture.id}).toArray(function(err, questionDocs) { //get all questions in lecture
+                            questionDocs.forEach(function(questionDoc) {
+                                question = new Question(questionDoc, studentDoc);
+                                lecture.questions.push(question);
+                            });
+                            course.lectures.push(lecture);
+                        });
+                    });
+                    student.courses.push(new Course(courseDoc));
+                });
+            });
+            response.send({
+                data : {student : student},
+                success : true
+            });
+        });
+    });
+            
+            
+}
+
 
 //QUESTIONS ROUTES
 

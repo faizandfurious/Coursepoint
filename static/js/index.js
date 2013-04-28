@@ -85,7 +85,6 @@ function showClass(){
     timer.css("visibility","hidden");
 }
 
-
 function showQuiz(){
     class_list_page.hide();
     quiz_page.show();
@@ -173,7 +172,6 @@ $("#sign_in_button").click(function(){
         loadStudentData(values["username"]);
         console.log("test");
         showClass();
-        $("#user_name_item").html(values["username"]);
     }
 });
 
@@ -191,10 +189,10 @@ function loadStudentData (username) {
             student = response.data.student;
             console.log("success");
             console.log(student);
+            $("#user_name_item").html(username);
             refreshCourseList();
         }
     });
-    // getCourses();
   
 }
 
@@ -297,6 +295,8 @@ function refreshCourseList() {
         return;
     if(student["courses"] === undefined)
         return;
+    
+    $("#classes").html("");
 
     student["courses"].forEach( function(course) {
         console.log("course: " + course);
