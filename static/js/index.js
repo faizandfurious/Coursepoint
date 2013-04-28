@@ -13,6 +13,7 @@ var courses;
 
 
 $(document).ready(function(){
+    refreshCourseList();
     getCourses();
     showLogin();
 });
