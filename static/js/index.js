@@ -13,6 +13,7 @@ var courses;
 
 
 $(document).ready(function(){
+    refreshCourseList();
     getCourses();
     showLogin();
 });
@@ -259,7 +260,23 @@ function addCourse(){
     })
 }
 
+function removeCourse(){
+    $.ajax({
+        type: "post",
+        data: {student_id : student._id,
+                course_id : "517c4c3658a0370a64000001"},
+        url: "/remove_course",
+        success: function(data){
+            console.log("updated");
+            student = data.student;
+            refreshCourseList();
+            console.log(data);
+        }
+    })
+}
+
 function refreshCourseList() {
+    $("#classes").html("");
     if(!student)
         return;
     if(student["courses"] === undefined)

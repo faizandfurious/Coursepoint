@@ -295,6 +295,71 @@ function getQuestions(questions, docs, response) {
 
 }
 
+app.post("/remove_course", function(request, response){
+ var student_id = toBSONID(request.body.student_id);
+    var course_id = toBSONID(request.body.course_id);
+    console.log(student_id + ", " + course_id);
+    var query = {_id : student_id};
+    var course_query = {_id : course_id};
+
+    //Find the student via the providede student_id
+    studentCollection.findOne(query, function(err, student){
+        if(err)
+            throw err;
+        //if we found the student, attempt to add the course to the student document
+        if(student){
+            console.log(student);
+            //Ensure that the courses array in student exists. If not, create it.
+            if(student.courses){
+                var courses = student.courses;
+                //Now that we have access to the courses array of the student, we attempt to find
+                //the course that was provided in the request via the course id, if we find it,
+                //we add it to the student document (if it doesn't already exist there).
+                courseCollection.findOne(course_query, function(err, course_doc){
+                    if(err)
+                        throw err;
+                    if(course_doc){
+                        console.log(course_doc);
+                        //We search through the courses array of the student document to try to find
+                        //the course in question. If we find it, we do nothing. Otherwise we add the course
+                        //document courses array in the student document.
+                        var index = indexOfCourseInStudent(course_doc, student);
+                        if(index >= 0){
+                            console.log("going to remove");
+                            //We push the course document to the courses array, and then do a partial update
+                            //of the student document.
+                            courses.splice(index, 1);
+                            var partialUpdate = { $set: { courses: courses } };
+                            //Partially update student to include the new course. Since this is an async
+                            //task, we place the response in the callback
+                            studentCollection.update(query, partialUpdate, function(error, doc){
+                                if (error)
+                                    throw error;
+                                //If there's no error, we look for the student again, and if we do, send it back to the 
+                                //client with the updated version of the student.
+                                studentCollection.findOne(query, function(err, updated_student){
+                                    if(err)
+                                        throw err;
+                                    //if we found the student, attempt to add the course to the student document
+                                    if(updated_student){
+                                        console.log(updated_student);
+                                        response.send({
+                                            student : updated_student,
+                                            success : true
+                                        });
+                                    }
+                                });
+                            });
+                        }
+                    }
+                });
+            }
+            //Otherwise, do nothing.
+        }
+    });
+
+})
+
 //Assume POST: Student ID and Course ID
 
 app.post("/add_course", function(request, response){
@@ -377,6 +442,22 @@ function courseExistsInStudent(course, student){
         }
     }
     return false;
+}
+
+//This function checks to see if the course is already included in the student's course array. If it is,
+//it returns the index
+function indexOfCourseInStudent(course, student){
+    if(student.courses){
+    console.log("courses exist");
+        courses = student.courses;
+        for(var i = 0; i < courses.length; i++){
+            //Compare the string versions of the ids
+            if("" + courses[i]._id === "" + course._id){
+                return i;
+            }
+        }
+    }
+    return -1;
 }
 
 //QUIZ ROUTES
