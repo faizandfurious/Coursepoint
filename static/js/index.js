@@ -13,6 +13,7 @@ var courses;
 
 
 $(document).ready(function(){
+    getCourses();
     showLogin();
 });
 
@@ -74,7 +75,6 @@ function showClass(){
     showTopbarButtons();
     addGradientToBody();
 }
-
 
 function showQuiz(){
     class_list_page.hide();
@@ -170,6 +170,7 @@ function loadStudentData (username) {
         data: {username: username},
         url: "/student",
         success: function(response){
+            console.log(response);
             student = response.data.student;
             console.log("success");
             console.log(student);
@@ -197,7 +198,7 @@ function getClass(id){
         type: "get",
         url:"/course/" + id,
         success: function(data){
-            console.log(data);
+            return data;
         }
     });
 }
@@ -233,47 +234,58 @@ function getCourses(){
         type: "get",
         url:"/courses",
         success: function(data){
-            console.log(data);
+            for(i in data.data){
+                console.log(data.data[i]);
+            }
+            courses = data.data;
         }
     });
 }
 
 function addCourse(){
+    console.log("student");
     console.log(student._id);
     $.ajax({
         type: "post",
         data: {student_id : student._id,
-                course_id : 1},
+                course_id : "517c4c3658a0370a64000001"},
         url: "/add_course",
         success: function(data){
+            console.log("updated");
+            student = data.student;
             refreshCourseList();
+            console.log(data);
         }
     })
 }
 
 function refreshCourseList() {
-    console.log("refreshed");
+    if(!student)
+        return;
     if(student["courses"] === undefined)
         return;
-
-    $("#classes").empty();
+    
+    $("#classes").html("");
 
     student["courses"].forEach( function(course) {
-        var classli = $('<li>').html("").addClass("class_item").attr("id","calculus");
-        classli.addClass("class grey_drop");
-        classli.append($('<span>').html("").addClass("class_image"));
-        classli.append($('<span>').html(course["name"]).addClass("class_name"));
-        classli.append($('<span>').html(course["location"]).addClass("class_location"));
-        classli.append($('<span>').html(course["time"]).addClass("class_time"));
-        classli.append($('<span>').html("").addClass("arrow"));
-        $("#classes").append(classli);
-        classli.click(function(){
-            name = $(this).attr("id");
-            console.log(name);
-            //Put in request to get class information
-            getClass(name);
-            showQuiz();
-        });
+        console.log("course: " + course);
+        if(course){
+            var classli = $('<li>').html("").addClass("class_item").attr("id","calculus");
+            classli.addClass("class grey_drop");
+            classli.append($('<span>').html("").addClass("class_image"));
+            classli.append($('<span>').html(course["name"]).addClass("class_name"));
+            classli.append($('<span>').html(course["location"]).addClass("class_location"));
+            classli.append($('<span>').html(course["time"]).addClass("class_time"));
+            classli.append($('<span>').html("").addClass("arrow"));
+            $("#classes").append(classli);
+            classli.click(function(){
+                name = $(this).attr("id");
+                console.log(name);
+                //Put in request to get class information
+                getClass(name);
+                showQuiz();
+            });
+        }
 
     });
 

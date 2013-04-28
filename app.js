@@ -134,9 +134,16 @@ app.get("/courses", function(request, response) {
     var name = request.params.name;
     // console.log(name);
     var waiting = true;
-    var courses = [];
-    var courses = courseCollection.find();
-    
+    courseCollection.find().toArray(function(err, docs){
+        if(err)
+            throw err;
+        if(docs){
+            response.send({
+                data : docs,
+                success : true
+            })
+        }
+    });
 });
 
 app.get("/course/:name", function(request, response) {
@@ -159,7 +166,6 @@ app.get("/course/:name", function(request, response) {
 app.post("/student", function(request, response) {
     var username = request.body.username;
     var query = {username : username};
-    var student;
 
     studentCollection.findOne(query, function(err, doc){
         if(err)
@@ -167,28 +173,93 @@ app.post("/student", function(request, response) {
         if(doc === null){
             studentCollection.insert({username : username}, function (err, doc) {
                 response.send({
-                    data : {student : doc},
+                    data : {student : doc[0]},
                     success : true
                 });
             });
         }
         else{
-            response.send({
-                data : {student : doc},
-                success : true
-            });
+            console.log(doc);
+            constructStudent(doc, response);
+            
         }
     });
 
-    var students = studentCollection.find().each(logDoc);
-    
-    //var courses = [1, 2];
-    //var student = {"name" : "Faiz",
-    //                "courses" : courses,
-    //                };
-
-        
 });
+
+function Student(doc) {
+    this.username = doc["username"];
+    this.name = doc["name"];
+    this.courses = [];
+
+}
+
+function Course(doc) {
+    this.id = doc["course_id"];
+    this.name = doc["name"];
+    this.time = doc["time"];
+    this.location = doc["location"];
+    this.lectures = [];
+}
+
+function Lecture(doc) {
+    this.id = doc["lecture_id"];
+    this.name = doc["name"];
+    this.questions = [];
+}
+
+function Question(questionDoc, studentDoc) {
+    this.id = questionDoc["question_id"];
+    this.category = questionDoc["category"];
+    this.tags = questionDoc["tags"];
+    this.body = questionDoc["body"];
+    this.choices = questionDoc["choices"];
+    if(questionDoc["complete"] === true) {
+        this.studentAnswer = studentDoc["answers"][this.questionId];
+        this.complete = true;
+        this.correctAnswer = question["correctAnswer"];
+        this.explanation = question["explanation"];
+    } else {
+        this.complete = false;
+    }
+}
+
+function constructStudent(studentDoc, response) {
+    var student = new Student(studentDoc);
+    var course;
+    var leture;
+    var question;
+
+    //get each course
+    studentDoc["courses"].forEach( function(course_id) {
+        courseCollection.find({course_id : course_id}).toArray(function(err,courseDocs) { //get all courses
+            courseDocs.forEach(function(courseDoc) { 
+                course = new Course(courseDoc);
+                //get each lecture
+                lectureCollection.find({course_id : course.id}).toArray(function(err, lectureDocs) { //get all lectures in course
+                    lectureDocs.forEach(function(lectureDoc) {
+                        lecture = new Lecture(lectureDoc);
+                        questionCollection.find({lecture_id : lecture.id}).toArray(function(err, questionDocs) { //get all questions in lecture
+                            questionDocs.forEach(function(questionDoc) {
+                                question = new Question(questionDoc, studentDoc);
+                                lecture.questions.push(question);
+                            });
+                            course.lectures.push(lecture);
+                        });
+                    });
+                    student.courses.push(new Course(courseDoc));
+                });
+            });
+            response.send({
+                data : {student : student},
+                success : true
+            });
+        });
+    });
+            
+            
+}
+
 
 //QUESTIONS ROUTES
 
@@ -227,42 +298,86 @@ function getQuestions(questions, docs, response) {
 //Assume POST: Student ID and Course ID
 
 app.post("/add_course", function(request, response){
-    console.log(request.body.student_id);
     var student_id = toBSONID(request.body.student_id);
-    var course_id = request.body.course_id;
+    var course_id = toBSONID(request.body.course_id);
     console.log(student_id + ", " + course_id);
     var query = {_id : student_id};
-    studentCollection.findOne(query, function(err, doc){
+    var course_query = {_id : course_id};
+
+    //Find the student via the providede student_id
+    studentCollection.findOne(query, function(err, student){
         if(err)
             throw err;
-        if(doc){
-            if(doc.courses){
-                var courses = doc.courses;
+        //if we found the student, attempt to add the course to the student document
+        if(student){
+            console.log(student);
+            //Ensure that the courses array in student exists. If not, create it.
+            if(student.courses){
+                var courses = student.courses;
             }
             else{
                 var courses = [];
             }
 
-            if(courses.indexOf(course_id) === -1){
-                courses.push(course_id);
-                var partialUpdate = { $set: { courses: courses } };
-                //Partially update student to include the new course. Since this is an async
-                //task, we place the response in the callback
-                studentCollection.update(query, partialUpdate, function(error, doc){
-                    if (error)
-                        throw error;
-                    response.send({
-                        student : doc,
-                        success : true
-                    });
-                    console.log("Added");
-
-                });
-            }
+            //Now that we have access to the courses array of the student, we attempt to find
+            //the course that was provided in the request via the course id, if we find it,
+            //we add it to the student document (if it doesn't already exist there).
+            courseCollection.findOne(course_query, function(err, course_doc){
+                if(err)
+                    throw err;
+                if(course_doc){
+                    console.log(course_doc);
+                    //We search through the courses array of the student document to try to find
+                    //the course in question. If we find it, we do nothing. Otherwise we add the course
+                    //document courses array in the student document.
+                    if(!courseExistsInStudent(course_doc, student)){
+                        console.log("going to add");
+                        //We push the course document to the courses array, and then do a partial update
+                        //of the student document.
+                        courses.push(course_doc);
+                        var partialUpdate = { $set: { courses: courses } };
+                        //Partially update student to include the new course. Since this is an async
+                        //task, we place the response in the callback
+                        studentCollection.update(query, partialUpdate, function(error, doc){
+                            if (error)
+                                throw error;
+                            //If there's no error, we look for the student again, and if we do, send it back to the 
+                            //client with the updated version of the student.
+                            studentCollection.findOne(query, function(err, updated_student){
+                                if(err)
+                                    throw err;
+                                //if we found the student, attempt to add the course to the student document
+                                if(updated_student){
+                                    console.log(updated_student);
+                                    response.send({
+                                        student : updated_student,
+                                        success : true
+                                    });
+                                }
+                            });
+                        });
+                    }
+                }
+            });
             //Otherwise, do nothing.
         }
     });
 });
+
+//This function checks to see if the course is already included in the student's course array.
+function courseExistsInStudent(course, student){
+    if(student.courses){
+    console.log("courses exist");
+        courses = student.courses;
+        for(var i = 0; i < courses.length; i++){
+            //Compare the string versions of the ids
+            if("" + courses[i]._id === "" + course._id){
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 //QUIZ ROUTES
 
@@ -271,6 +386,7 @@ function initServer() {
 }
 
 function toBSONID(hexCode){
+    console.log(hexCode);
     return BSON.ObjectID.createFromHexString(hexCode);
 }
 
