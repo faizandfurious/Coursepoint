@@ -262,12 +262,12 @@ function addCourse(){
 }
 
 function refreshCourseList() {
+    $("#classes").html("");
     if(!student)
         return;
     if(student["courses"] === undefined)
         return;
 
-    $("#classes").html("");
     student["courses"].forEach( function(course) {
         console.log("course: " + course);
         if(course){
