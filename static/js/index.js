@@ -157,7 +157,6 @@ $("#sign_in_button").click(function(){
         loadStudentData(values["username"]);
         console.log("test");
         showClass();
-        $("#user_name_item").html(values["username"]);
     }
 });
 
@@ -174,10 +173,10 @@ function loadStudentData (username) {
             student = response.data.student;
             console.log("success");
             console.log(student);
+            $("#user_name_item").html(username);
             refreshCourseList();
         }
     });
-    // getCourses();
   
 }
 
@@ -256,6 +255,8 @@ function refreshCourseList() {
     console.log("refreshed");
     if(student["courses"] === undefined)
         return;
+
+    $("#classes").empty();
 
     student["courses"].forEach( function(course) {
         var classli = $('<li>').html("").addClass("class_item").attr("id","calculus");
