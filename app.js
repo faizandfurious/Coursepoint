@@ -172,7 +172,7 @@ app.post("/student", function(request, response) {
             throw err;
         if(doc === null){
             console.log("Creating new user");
-            studentCollection.insert({username : username}, function (err, doc) {
+            studentCollection.insert({username : username, courses : []}, function (err, doc) {
                 response.send({
                     data : {student : doc[0]},
                     success : true
@@ -192,7 +192,6 @@ app.post("/student", function(request, response) {
 function Student(doc) {
     this.username = doc["username"];
     this.name = doc["name"];
-    this._id = doc["_id"];
     this.courses = [];
 
 }
@@ -232,6 +231,16 @@ function constructStudent(studentDoc, response) {
     var course;
     var leture;
     var question;
+    console.log("called");
+
+    //Check if courses exists, and if so, if the length is zero, just send the student
+    //doc back
+    if(studentDoc["courses"] || studentDoc["courses"].length === 0){
+        response.send({
+            data : {student : student},
+            success : true
+        });
+    }
 
     //get each course
     studentDoc["courses"].forEach( function(course_id) {
@@ -299,10 +308,10 @@ function getQuestions(questions, docs, response) {
 }
 
 app.post("/remove_course", function(request, response){
- var student_id = toBSONID(request.body.student_id);
+    var student_name = request.body.student_name;
     var course_id = toBSONID(request.body.course_id);
-    console.log(student_id + ", " + course_id);
-    var query = {_id : student_id};
+    console.log(student_name + ", " + course_id);
+    var query = {username : student_name};
     var course_query = {_id : course_id};
 
     //Find the student via the providede student_id
@@ -366,24 +375,26 @@ app.post("/remove_course", function(request, response){
 //Assume POST: Student ID and Course ID
 
 app.post("/add_course", function(request, response){
-    var student_id = toBSONID(request.body.student_id);
+    var student_name = request.body.student_name;
     var course_id = toBSONID(request.body.course_id);
-    console.log(student_id + ", " + course_id);
-    var query = {_id : student_id};
+    console.log(student_name + ", " + course_id);
+    var query = {username : student_name};
     var course_query = {_id : course_id};
 
-    //Find the student via the providede student_id
+    //Find the student via the provided student username
     studentCollection.findOne(query, function(err, student){
         if(err)
             throw err;
         //if we found the student, attempt to add the course to the student document
         if(student){
+            console.log("Found student");
             console.log(student);
             //Ensure that the courses array in student exists. If not, create it.
             if(student.courses){
                 var courses = student.courses;
             }
             else{
+            console.log("Creating courses");
                 var courses = [];
             }
 
@@ -394,6 +405,7 @@ app.post("/add_course", function(request, response){
                 if(err)
                     throw err;
                 if(course_doc){
+                    console.log("Found course");
                     console.log(course_doc);
                     //We search through the courses array of the student document to try to find
                     //the course in question. If we find it, we do nothing. Otherwise we add the course
@@ -426,6 +438,8 @@ app.post("/add_course", function(request, response){
                         });
                     }
                 }
+
+                console.log("Course does not exist");
             });
             //Otherwise, do nothing.
         }

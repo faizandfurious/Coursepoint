@@ -259,11 +259,11 @@ function getCourses(){
 
 function addCourse(){
     console.log("student");
-    console.log(student._id);
+    console.log(student.username);
     $.ajax({
         type: "post",
-        data: {student_id : student._id,
-                course_id : "517c4c3658a0370a64000001"},
+        data: {student_name : student.username,
+                course_id : "517db54299496ad96b000001"},
         url: "/add_course",
         success: function(data){
             console.log("updated");
@@ -277,8 +277,8 @@ function addCourse(){
 function removeCourse(){
     $.ajax({
         type: "post",
-        data: {student_id : student._id,
-                course_id : "517c4c3658a0370a64000001"},
+        data: {student_name : student.username,
+                course_id : "517db54299496ad96b000001"},
         url: "/remove_course",
         success: function(data){
             console.log("updated");
