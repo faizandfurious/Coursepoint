@@ -171,6 +171,7 @@ app.post("/student", function(request, response) {
         if(err)
             throw err;
         if(doc === null){
+            console.log("Creating new user");
             studentCollection.insert({username : username}, function (err, doc) {
                 response.send({
                     data : {student : doc[0]},
@@ -179,6 +180,7 @@ app.post("/student", function(request, response) {
             });
         }
         else{
+            console.log("Exists");
             console.log(doc);
             constructStudent(doc, response);
             
@@ -190,6 +192,7 @@ app.post("/student", function(request, response) {
 function Student(doc) {
     this.username = doc["username"];
     this.name = doc["name"];
+    this._id = doc["_id"];
     this.courses = [];
 
 }
