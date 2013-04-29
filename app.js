@@ -150,6 +150,16 @@ app.get("/static/views/:staticFilename", function (request, response) {
 });
 
 // This is for serving files in the static directory
+app.get("/static/views/student/:staticFilename", function (request, response) {
+    response.sendfile("static/views/student/" + request.params.staticFilename);
+});
+
+// This is for serving files in the static directory
+app.get("/static/views/teacher/:staticFilename", function (request, response) {
+    response.sendfile("static/views/teacher/" + request.params.staticFilename);
+});
+
+// This is for serving files in the static directory
 app.get("/static/js/:staticFilename", function (request, response) {
     response.sendfile("static/js/" + request.params.staticFilename);
 });

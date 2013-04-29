@@ -47,7 +47,7 @@ function showLogin(){
 function addGatesImageToBody(){
     $("body").css({
         'overflow':'hidden',
-        'background-image': 'url("../styles/images/ghc.jpg")',
+        'background-image': 'url("../../styles/images/ghc.jpg")',
         'background-repeat':'no-repeat',
         '-webkit-background-size': 'cover',
         '-moz-background-size': 'cover',
@@ -134,11 +134,11 @@ $("#add_class_button").click(function(){
     populateCourseSelection();
     if(class_selector.css("display") === "none"){
         class_selector.show();
-        add_class_button.css("background-image", 'url("../styles/images/close_button.png")');
+        add_class_button.css("background-image", 'url("../../styles/images/close_button.png")');
     }
     else{
         class_selector.hide();
-        add_class_button.css("background-image", 'url("../styles/images/add_button.png")');
+        add_class_button.css("background-image", 'url("../../styles/images/add_button.png")');
     }
 });
 
