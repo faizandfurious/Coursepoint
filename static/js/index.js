@@ -263,7 +263,7 @@ function addCourse(){
     $.ajax({
         type: "post",
         data: {student_name : student.username,
-                course_id : "517dc7fe7dbef9fe6c000001"},
+                course_id : "517e6ffbcdef73896e000002"},
         url: "/add_course",
         success: function(data){
             console.log("updated");
@@ -278,7 +278,7 @@ function removeCourse(){
     $.ajax({
         type: "post",
         data: {student_name : student.username,
-                course_id : "517dc7fe7dbef9fe6c000001"},
+                course_id : "517e6ffbcdef73896e000002"},
         url: "/remove_course",
         success: function(data){
             console.log("updated");

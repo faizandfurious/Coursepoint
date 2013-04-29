@@ -36,6 +36,7 @@ function onDbReady(error){
 
 function initializeDB(){
     var calculus = {
+        course_id : 'a922jdalx120',
         name : 'Calculus',
         location : 'Wean 4301',
         time : '9:30am'
@@ -51,6 +52,7 @@ function initializeDB(){
     });
 
     var mobile = {
+        course_id : 'b9183jfieh493',
         name : 'Mobile Web Apps',
         location : 'DH 1310',
         time : '3:00pm'
@@ -244,44 +246,53 @@ function constructStudent(studentDoc, response) {
             success : true
         });
     }
-    
-    //get each course
-    while(studentDoc["courses"].length > 0) {
-        var course_id = studentDoc["courses"].pop();
 
-        courseCollection.find({course_id : course_id}).toArray(function(err,courseDocs) { //get all courses
-
-            while(courseDocs.length > 0) { 
-                course = new Course(courseDocs.pop());
-                //get each lecture
-        
-                lectureCollection.find({course_id : course.id}).toArray(function(err, lectureDocs) { //get all lectures in course
-        
-                    while(lectureDocs.length > 0) {
-                        lecture = new Lecture(lectureDocs.pop());
-        
-                        questionCollection.find({lecture_id : lecture.id}).toArray(function(err, questionDocs) { //get all questions in lecture
-        
-                            while(questionDocs.length > 0) {
-                                question = new Question(questionDocs.pop(), studentDoc);
-                                lecture.questions.push(question);
-                            }
-
-                            course.lectures.push(lecture);
-
-                            if(studentDoc["courses"].length === 0 && courseDocs.length === 0 && lectureDocs.length === 0) {
-                                student.courses.push(course);
-                                response.send({
-                                    data : {student : student},
-                                    success : true
-                                });
-                            }
-        
-                        });
-                    }
-                });
-            }
+    else if(studentDoc["courses"].length === 0){
+        response.send({
+            data : {student : student},
+            success : true
         });
+    }
+    
+    else{
+        //get each course
+        while(studentDoc["courses"].length > 0) {
+            var course_id = studentDoc["courses"].pop();
+
+            courseCollection.find({course_id : course_id}).toArray(function(err,courseDocs) { //get all courses
+
+                while(courseDocs.length > 0) { 
+                    course = new Course(courseDocs.pop());
+                    //get each lecture
+            
+                    lectureCollection.find({course_id : course.id}).toArray(function(err, lectureDocs) { //get all lectures in course
+            
+                        while(lectureDocs.length > 0) {
+                            lecture = new Lecture(lectureDocs.pop());
+            
+                            questionCollection.find({lecture_id : lecture.id}).toArray(function(err, questionDocs) { //get all questions in lecture
+            
+                                while(questionDocs.length > 0) {
+                                    question = new Question(questionDocs.pop(), studentDoc);
+                                    lecture.questions.push(question);
+                                }
+
+                                course.lectures.push(lecture);
+
+                                if(studentDoc["courses"].length === 0 && courseDocs.length === 0 && lectureDocs.length === 0) {
+                                    student.courses.push(course);
+                                    response.send({
+                                        data : {student : student},
+                                        success : true
+                                    });
+                                }
+            
+                            });
+                        }
+                    });
+                }
+            });
+        }
     }
             
             
