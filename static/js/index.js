@@ -296,9 +296,8 @@ function refreshCourseList() {
     if(student["courses"] === undefined)
         return;
     
-    $("#classes").html("");
 
-    student["courses"].forEach( function(course) {
+    student.courses.forEach( function(course) {
         console.log("course: " + course);
         if(course){
             var classli = $('<li>').html("").addClass("class_item").attr("id","calculus");
