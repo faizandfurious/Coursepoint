@@ -260,6 +260,13 @@ button#add_class_button:active, button#add_class_button:focus{
     background: -o-linear-gradient(top, #F2F2F2, #E6E6E6);
 }
 
+#timer{
+    position:absolute;
+    right:60px;
+    color:green;
+}
+
+
 
 .hidden{
     visibility:hidden;
