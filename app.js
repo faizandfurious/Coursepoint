@@ -237,13 +237,14 @@ function constructStudent(studentDoc, response) {
 
     //Check if courses exists, and if so, if the length is zero, just send the student
     //doc back
-    if(studentDoc["courses"] || studentDoc["courses"].length === 0){
+    
+    if(studentDoc["courses"] === undefined){
         response.send({
             data : {student : student},
             success : true
         });
     }
-
+    
     //get each course
     while(studentDoc["courses"].length > 0) {
         var course_id = studentDoc["courses"].pop();
