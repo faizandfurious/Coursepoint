@@ -11,6 +11,7 @@ var port = mongo.Connection.DEFAULT_PORT;
 var optionsWithEnableWriteAccess = { w: 1, r:1 };
 var dbName = 'test';
 var questionCollection;
+var lectureCollection;
 var studentCollection;
 var courseCollection;
 var BSON = require('mongodb').BSONPure; //For ID searching
@@ -27,6 +28,7 @@ function onDbReady(error){
     if (error)
         throw error;
     questionCollection = client.collection('questionCollection');
+    lectureCollection = client.collection('lectureCollection');
     studentCollection = client.collection('studentCollection');
     courseCollection = client.collection('courseCollection');
     initializeDB();
@@ -227,35 +229,47 @@ function Question(questionDoc, studentDoc) {
 function constructStudent(studentDoc, response) {
     var student = new Student(studentDoc);
     var course;
-    var leture;
+    var lecture;
     var question;
 
     //get each course
-    studentDoc["courses"].forEach( function(course_id) {
+    while(studentDoc["courses"].length > 0) {
+        var course_id = studentDoc["courses"].pop();
+
         courseCollection.find({course_id : course_id}).toArray(function(err,courseDocs) { //get all courses
-            courseDocs.forEach(function(courseDoc) { 
-                course = new Course(courseDoc);
+
+            while(courseDocs.length > 0) { 
+                course = new Course(courseDocs.pop());
                 //get each lecture
+        
                 lectureCollection.find({course_id : course.id}).toArray(function(err, lectureDocs) { //get all lectures in course
-                    lectureDocs.forEach(function(lectureDoc) {
-                        lecture = new Lecture(lectureDoc);
+        
+                    while(lectureDocs.length > 0) {
+                        lecture = new Lecture(lectureDocs.pop());
+        
                         questionCollection.find({lecture_id : lecture.id}).toArray(function(err, questionDocs) { //get all questions in lecture
-                            questionDocs.forEach(function(questionDoc) {
-                                question = new Question(questionDoc, studentDoc);
+        
+                            while(questionDocs.length > 0) {
+                                question = new Question(questionDocs.pop(), studentDoc);
                                 lecture.questions.push(question);
-                            });
+                            }
+
                             course.lectures.push(lecture);
+
+                            if(studentDoc["courses"].length === 0 && courseDocs.length === 0 && lectureDocs.length === 0) {
+                                student.courses.push(course);
+                                response.send({
+                                    data : {student : student},
+                                    success : true
+                                });
+                            }
+        
                         });
-                    });
-                    student.courses.push(new Course(courseDoc));
+                    }
                 });
-            });
-            response.send({
-                data : {student : student},
-                success : true
-            });
+            }
         });
-    });
+    }
             
             
 }
