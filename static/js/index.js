@@ -6,6 +6,8 @@ var menu_button = $("#menu_button");
 var back_button = $("#back_button");
 var add_class_button = $("#add_class_button");
 var timer = $("#timer");
+var class_selector = $("#class_selection_pane");
+var course_list = $("#course_list");
 
 // BIND MENU ACTIONS
 var menuOpen = false;
@@ -36,6 +38,7 @@ function showTopbarButtons(){
 function showLogin(){
     class_list_page.hide();
     quiz_page.hide();
+    class_selector.hide();
     login_page.show();
     hideTopbarButtons();
     addGatesImageToBody();
@@ -128,8 +131,15 @@ function toggleMenu(){
 
 
 $("#add_class_button").click(function(){
-    console.log("add class button clicked");
-    addCourse();
+    populateCourseSelection();
+    if(class_selector.css("display") === "none"){
+        class_selector.show();
+        add_class_button.css("background-image", 'url("../styles/images/close_button.png")');
+    }
+    else{
+        class_selector.hide();
+        add_class_button.css("background-image", 'url("../styles/images/add_button.png")');
+    }
 });
 
 $(".class_item").click(function(){
@@ -191,6 +201,7 @@ function loadStudentData (username) {
             console.log(student);
             $("#user_name_item").html(username);
             refreshCourseList();
+            populateCourseSelection();
         }
     });
   
@@ -257,13 +268,13 @@ function getCourses(){
     });
 }
 
-function addCourse(){
+function addCourse(course_id){
     console.log("student");
     console.log(student.username);
     $.ajax({
         type: "post",
         data: {student_name : student.username,
-                course_id : "517e78f074be55d36e000002"},
+                course_id : course_id},
         url: "/add_course",
         success: function(data){
             console.log("updated");
@@ -274,11 +285,11 @@ function addCourse(){
     })
 }
 
-function removeCourse(){
+function removeCourse(course_id){
     $.ajax({
         type: "post",
         data: {student_name : student.username,
-                course_id : "517e78f074be55d36e000002"},
+                course_id : course_id},
         url: "/remove_course",
         success: function(data){
             console.log("updated");
@@ -349,5 +360,39 @@ function startQuiz(time){
         }
         time--;
     }, 1000);
+}
+
+function populateCourseSelection(){
+    course_list.html("");
+    courses.forEach(function(course){
+        console.log(course);
+        var classli = $('<li>').html("").attr("id",course._id);
+        classli.append($('<span>').html(course.name));
+        var found = false;
+        var button;
+        student.courses.forEach(function(stu_course){
+            if(!found){
+
+                console.log("The Ids");
+                console.log(stu_course.course_id);
+                console.log(course.course_id);
+                if(stu_course.course_id === course.course_id){
+                    found = true;
+                    button = $('<button class="btn red-btn">').html("Delete");
+                    button.click(function(){
+                        removeCourse(course._id);
+                    });
+                }
+            }
+        });
+        if(!found){
+            button = $('<button class="btn green-btn">').html("Sign Up");
+                button.click(function(){
+                    addCourse(course._id);
+                });
+        }
+        classli.append(button);
+        course_list.append(classli);
+    });
 }
 

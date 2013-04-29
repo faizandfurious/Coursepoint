@@ -1,0 +1,36 @@
+#class_selection_pane{
+    width:300px;
+    height:400px;
+    position:    absolute;
+    top:         60px;
+    left:        50%;    /* move the left edge to the center … */
+    margin-left: -150px; /* … and move it to the left half the box’ width. */
+    z-index:     9999;   /* Try to get it on top. */
+    overflow-x: scroll;
+    border-radius:6px;
+    border:1px solid #aaa;
+}
+
+#course_list{
+    font-size:1.6em;
+    border-radius:6px;
+    background-color:#eee;
+    border: 1px solid #aaa;
+}
+
+#course_list li{
+    line-height: 2;
+    font-size:1em;
+    border-top: 1px solid #aaa;
+    font-family: 'Century Gothic', 'Helvetica';
+    padding:12px 10px;
+}
+
+#course_list li:first-child{
+    border-top:none;
+}
+
+#course_list li button{
+    float:right;
+    font-size:1em;
+}

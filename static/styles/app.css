@@ -22,6 +22,7 @@ button{
 }
 
 #content{
+    position:relative;
     margin-top:44px;
 }
 
@@ -185,6 +186,51 @@ form:first-child{
     
 }
 
+.red-btn{
+    color:#fff;
+
+    /* fallback */
+    background-color: #a30000;
+    background-repeat: repeat-x;
+
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f10000), to(#a30000));
+
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(top, #f10000, #a30000);
+
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(top, #f10000, #a30000);
+
+    /* IE 10 */
+    background: -ms-linear-gradient(top, #f10000, #a30000);
+
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(top, #f10000, #a30000);
+}
+
+.red-btn:active, .red-btn:focus{
+    /* fallback */
+    background-color: #820000;
+    background-repeat: repeat-x;
+
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#a30000), to(#820000));
+
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(top, #a30000, #820000);
+
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(top, #a30000, #820000);
+
+    /* IE 10 */
+    background: -ms-linear-gradient(top, #a30000, #820000);
+
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(top, #a30000, #820000);
+    
+}
+
 button#menu_button{
     position:absolute;
     margin-right:7px;
@@ -305,23 +351,6 @@ button#add_class_button:active, button#add_class_button:focus{
     margin-top:20px;
     color:#fff;
     font-size:1.5em;
-}
-
-#menu .item.navigate{
-  background: #3a3a3a url('../img/menu-navigate.png') 8px center no-repeat;
-  background-size: auto 50%;
-}
-#menu .item.manual{
-  background: #3a3a3a url('../img/menu-drive.png') 10px center no-repeat;
-  background-size: auto 45%;
-}
-#menu .item.training{
-  background: #3a3a3a url('../img/menu-training.png') 10px center no-repeat;
-  background-size: auto 45%;
-}
-#menu .item.settings{
-  background: #3a3a3a url('../img/menu-settings.png') 10px center no-repeat;
-  background-size: auto 45%;
 }
 
 #quiz_content{
