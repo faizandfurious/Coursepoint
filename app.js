@@ -437,9 +437,16 @@ app.post("/add_course", function(request, response){
                             });
                         });
                     }
+                    else{
+                        response.send({
+                            student : student,
+                            success : true
+                        });
+                    }
                 }
-
-                console.log("Course does not exist");
+                else{
+                    console.log("Course does not exist");
+                }
             });
             //Otherwise, do nothing.
         }
@@ -449,14 +456,17 @@ app.post("/add_course", function(request, response){
 //This function checks to see if the course is already included in the student's course array.
 function courseExistsInStudent(course, student){
     if(student.courses){
-    console.log("courses exist");
+        console.log("courses exist");
         courses = student.courses;
         for(var i = 0; i < courses.length; i++){
+            console.log(courses[i]._id);
             //Compare the string versions of the ids
             if("" + courses[i]._id === "" + course._id){
+                console.log("Found the course");
                 return true;
             }
         }
+        return false;
     }
     return false;
 }
@@ -465,7 +475,7 @@ function courseExistsInStudent(course, student){
 //it returns the index
 function indexOfCourseInStudent(course, student){
     if(student.courses){
-    console.log("courses exist");
+        console.log("courses exist");
         courses = student.courses;
         for(var i = 0; i < courses.length; i++){
             //Compare the string versions of the ids
@@ -473,6 +483,7 @@ function indexOfCourseInStudent(course, student){
                 return i;
             }
         }
+        return -1;
     }
     return -1;
 }
