@@ -51,6 +51,22 @@ function initializeDB(){
         }
     });
 
+    var calculus_lecture_1 = {
+        lecture_id : 'j3948ajdhq193',
+        course_id : 'a922jdalx120',
+        name : 'Lecture 1'
+    };
+
+    lectureCollection.findOne({lecture_id : 'j3948ajdhq193'}, function(err, doc){
+        if(err)
+            throw err;
+        if(doc === null){
+            lectureCollection.insert(calculus_lecture_1, function (err, doc) {
+
+            })
+        }
+    });
+
     var mobile = {
         course_id : 'b9183jfieh493',
         name : 'Mobile Web Apps',
@@ -58,11 +74,27 @@ function initializeDB(){
         time : '3:00pm'
     }
 
-    courseCollection.findOne({name : 'Mobile Web Apps'}, function(err, doc){
+    courseCollection.findOne({course_id : 'b9183jfieh493'}, function(err, doc){
         if(err)
             throw err;
         if(doc === null){
             courseCollection.insert(mobile, function (err, doc) {
+
+            });
+        }
+    });
+
+    var mobile_lecture_1 = {
+        lecture_id : 'f1939fjahe932',
+        course_id : 'b9183jfieh493',
+        name : 'Lecture 1'
+    }
+
+    lectureCollection.findOne({lecture_id : 'f1939fjahe932'}, function(err, doc){
+        if(err)
+            throw err;
+        if(doc === null){
+            lectureCollection.insert(mobile_lecture_1, function (err, doc) {
 
             });
         }
@@ -210,6 +242,7 @@ function Course(doc) {
 
 function Lecture(doc) {
     this.id = doc["lecture_id"];
+    this.course_id = doc["course_id"];
     this.name = doc["name"];
     this.questions = [];
 }
@@ -257,10 +290,11 @@ function constructStudent(studentDoc, response) {
     else{
         //get each course
         while(studentDoc["courses"].length > 0) {
-            var course_id = studentDoc["courses"].pop();
+            var next_course = studentDoc["courses"].pop();
 
-            courseCollection.find({course_id : course_id}).toArray(function(err,courseDocs) { //get all courses
-
+            courseCollection.find({course_id : next_course.course_id}).toArray(function(err,courseDocs) { //get all courses
+                console.log("course_id");
+                console.log(courseDocs);
                 while(courseDocs.length > 0) { 
                     course = new Course(courseDocs.pop());
                     //get each lecture
