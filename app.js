@@ -284,6 +284,7 @@ app.post("/create_question", function(request, response){
             course_id : course_id,
             lecture_name : lecture_name,
             correctAnswer : correctAnswer,
+            choices : choices,
             body : body,
             correctAnswer : correctAnswer
         }
@@ -303,7 +304,30 @@ app.post("/create_question", function(request, response){
         });
     }
     });
-})
+});
+
+app.post("/delete_question", function(request, response){
+    var _id = toBSONID(request.body.question_id);
+    var query = {_id : _id};
+    console.log(_id);
+    questionCollection.findOne(query, function(err, doc){
+        if(err)
+            throw err;
+        if(doc === null){
+            console.log("Doesn't exist");
+        }
+        else{
+            questionCollection.remove(query, function(err, doc){
+                if(err)
+                    throw err
+                response.send({
+                    data : doc,
+                    success : true
+                });
+            });
+        }
+    });
+});
 
 app.get("/get_questions/:course_id", function(request, response){
     

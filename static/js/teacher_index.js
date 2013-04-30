@@ -128,6 +128,29 @@ function getCourses(){
     });
 }
 
+function deleteCourse(course_id){
+     $.ajax({
+        type:"post",
+        data: {course_id : course_id},
+        url:"/delete_course",
+        success: function(data){
+            courses = data.data;
+            populateCourseSelection();
+        }
+    });
+}
+
+
+function deleteQuestion(question_id){
+     $.ajax({
+        type:"post",
+        data: {question_id : question_id},
+        url:"/delete_question",
+        success: function(data){
+            console.log(data);
+        }
+    });
+}
 
 
 function addCourse(course_id){
@@ -173,15 +196,7 @@ function populateCourseSelection(){
                 var delete_button = $("<button id='delete_button' class='btn red-btn'>Delete</button>");
                 delete_button.click(function(){
                     console.log(course._id);
-                    $.ajax({
-                        type:"post",
-                        data: {course_id : course._id},
-                        url:"/delete_course",
-                        success: function(data){
-                            courses = data.data;
-                            populateCourseSelection();
-                        }
-                    });
+                    deleteCourse(course._id);
                 });
                 course_container.append(title);
                 var course_info = $("<div id='course_info'></div>");
@@ -195,6 +210,43 @@ function populateCourseSelection(){
 
                 var quiz_create_button = $("<button id='quiz_create_button' class='btn blue-btn'>Create a Question</button>");
                 dynamic_course_content.append(quiz_create_button);
+
+
+                //Showing Quizzes logic
+                var quiz_listings = $('<div id="quiz_listings">');
+                for(var i = 0; i < course_questions.length; i++){
+                    question = course_questions[i];
+                    console.log(question);
+                    var question_area = $('<div class="question_area"></div>');
+                    var question_name = $('<h1 class="question_name"></h1>').html(question.body);
+                    var lecture_name = $('<h1 class="lecture_name"></h1>').html(question.lecture_name);
+                    var send_quiz_button = $("<button id = 'send_quiz_button' class='btn green-btn'>Administer Quiz</button>");
+
+                    send_quiz_button.click(function(){
+                        console.log(question._id);
+                        //SEND THE QUIZ TO THE STUDENTS
+                    });
+
+
+                    var choices_name = $('<h1 class="choices_name">Choices:</h1>');
+                    var answers_ul = $('<ul class="answers"></ul>');
+                    for(var j = 0; j < question.choices.length; j++){
+                        var choice;
+                        if(course.correctAnswer === j){
+                            choice = $('<li class="choices correct"></li>').html(question.choices[j]);
+                        }
+                        else{
+                            choice = $('<li class="choices"></li>').html(question.choices[j]);
+                        }
+                        answers_ul.append(choice);
+                    }
+                    question_area.append(send_quiz_button, question_name, lecture_name, choices_name, answers_ul);
+                }
+                quiz_listings.append(question_area);
+                dynamic_course_content.append(quiz_listings);
+
+
+                //Quiz Form Creation
                 var i = 0;
                 quiz_create_button.click(function(){
                     $("#create_question_form").html("");
