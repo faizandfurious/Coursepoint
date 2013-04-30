@@ -95,9 +95,11 @@ form input[type=radio]{
 }
 
 .question_area{
+    position:relative;
     background-color:#ddd;
     border-radius:6px;
     padding:8px;
+    margin-bottom:5px;
 }
 
 #holder #main h1{
@@ -253,6 +255,13 @@ label.error{
     background-color:green;
 }
 
-#send_quiz_button{
+#send_question_button{
+    display:block;
+}
+
+#delete_question_button{
+    position:absolute;
+    top:8px;
+    right:8px;
     display:block;
 }

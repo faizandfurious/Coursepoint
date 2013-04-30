@@ -7,6 +7,9 @@ var courses;
 
 var course_questions;
 
+//Used for course creation form
+var active = false;
+
 
 $(document).ready(function(){
     hideTopbarButtons();
@@ -135,7 +138,12 @@ function deleteCourse(course_id){
         url:"/delete_course",
         success: function(data){
             courses = data.data;
-            populateCourseSelection();
+            $("#main").fadeOut(function(){
+            $('#banner').fadeOut();
+            $('#banner').css("visibility", "visible").addClass("red-btn").html("Course successfully deleted").fadeIn().delay(7000).fadeOut();
+
+                populateCourseSelection();
+            });
         }
     });
 }
@@ -177,7 +185,9 @@ function displayResponses(responses) {
 }
 
 function populateCourseSelection(){
+    console.log("test");
     course_list.html("");
+    $("#main").html("Welcome.").fadeIn();
     courses.forEach(function(course){
         console.log(course);
         var classli = $('<li>').html("").attr("id",course._id);
@@ -220,12 +230,20 @@ function populateCourseSelection(){
                     var question_area = $('<div class="question_area"></div>');
                     var question_name = $('<h1 class="question_name"></h1>').html(question.body);
                     var lecture_name = $('<h1 class="lecture_name"></h1>').html(question.lecture_name);
-                    var send_quiz_button = $("<button id = 'send_quiz_button' class='btn green-btn'>Administer Quiz</button>");
+                    var send_question_button = $("<button id = 'send_question_button' class='btn green-btn'>Administer Question</button>");
+                    var delete_question_button = $("<button id = 'delete_question_button' class='btn red-btn'>Delete Question</button>");
 
-                    send_quiz_button.click(function(){
-                        console.log(question._id);
+                    send_question_button.click(function(){
+                        console.log();
                         //SEND THE QUIZ TO THE STUDENTS
                     });
+
+                    delete_question_button.click(function(){
+                        deleteQuestion(question._id);
+                        delete_question_button.parent().fadeOut();
+                    });
+
+
 
 
                     var choices_name = $('<h1 class="choices_name">Choices:</h1>');
@@ -240,70 +258,80 @@ function populateCourseSelection(){
                         }
                         answers_ul.append(choice);
                     }
-                    question_area.append(send_quiz_button, question_name, lecture_name, choices_name, answers_ul);
+                    question_area.append(send_question_button, delete_question_button, question_name, lecture_name, choices_name, answers_ul);
+                    quiz_listings.append(question_area);
                 }
-                quiz_listings.append(question_area);
                 dynamic_course_content.append(quiz_listings);
 
 
                 //Quiz Form Creation
                 var i = 0;
                 quiz_create_button.click(function(){
-                    $("#create_question_form").html("");
-                    var add_choice_button = $("<button id = 'add_a_choice' class='btn blue-btn'>Add Another Answer</button>");
-                    add_choice_button.click(function(){
-                        if(i >= 4){
+                    if(!active){
+                        $("#create_question_form").html("");
+                        var add_choice_button = $("<button id = 'add_a_choice' class='btn blue-btn'>Add Another Answer</button>");
+                        add_choice_button.click(function(){
+                            if(i >= 4){
 
+                            }
+                            else{
+                                ++i;
+                                var choice_label = $("<label>Answer " + (i+1) +": </label>");
+                                var choice_desc = $("<span class='small_text'>Create an Answer</label>");
+                                var choice = $("<input type='text' placeholder='Possible Answer...' name='choice' class='text_box'></input>");
+                                var ans = $("<input type='radio' name='correctAnswer' id="+i+" value="+ i +"></input><br>");
+                                choice_label.append(choice_desc);
+                                form.append(choice_label, choice, ans);
+                            }
+                        });
+                        var create_title = $("<h1>Create a Question");
+                        var form = $("<form id='create_question_form'></form>");
+                        var name_label = $("<label>Lecture Name: </label>");
+                        var name_desc = $("<span class='small_text'>What's the lecture called?</label>");
+                        name_label.append(name_desc);
+                        var name_input = $("<input type='text' name='lecture_name' placeholder='Lecture Name' autofocus><br>");
+                        var body = $("<input type='text' name='body' placeholder='Question?'><br>");
+                        var body_label = $("<label>Question: </label>");
+                        var body_desc = $("<span class='small_text'>What's the Question?</label>");
+                        body_label.append(body_desc);
+                        var choice_label = $("<label>Answer " + (i+1) +": </label>");
+                        var choice_desc = $("<span class='small_text'>Create an Answer</label>");
+                        var choice = $("<input type='text' placeholder='Possible Answer...' name='choice' class='text_box'></input>");
+                        var ans = $("<input type='radio' name='correctAnswer' id="+i+" value="+ i +"></input><br>");
+                        choice_label.append(choice_desc);
+                        form.append(name_label, name_input, body_label, body, choice_label, choice, ans);
+                        var create_quiz_button = $("<button id='create_quiz_button' class='submit btn blue-btn' type='submit' name='submit'>Create</button>");
+                        var tempDiv = $("<div></div>").append(add_choice_button, form, create_quiz_button);
+                        if($(".question_area:first").length > 0){
+
+                            tempDiv.insertBefore($(".question_area:first"));
                         }
                         else{
-                            ++i;
-                            var choice_label = $("<label>Answer " + (i+1) +": </label>");
-                            var choice_desc = $("<span class='small_text'>Create an Answer</label>");
-                            var choice = $("<input type='text' placeholder='Possible Answer...' name='choice' class='text_box'></input>");
-                            var ans = $("<input type='radio' name='correctAnswer' id="+i+" value="+ i +"></input><br>");
-                            choice_label.append(choice_desc);
-                            form.append(choice_label, choice, ans);
+                            dynamic_course_content.append(tempDiv);
                         }
-                    });
-                    var create_title = $("<h1>Create a Question");
-                    var form = $("<form id='create_question_form'></form>");
-                    var name_label = $("<label>Lecture Name: </label>");
-                    var name_desc = $("<span class='small_text'>What's the lecture called?</label>");
-                    name_label.append(name_desc);
-                    var name_input = $("<input type='text' name='lecture_name' placeholder='Lecture Name' autofocus><br>");
-                    var body = $("<input type='text' name='body' placeholder='Question?'><br>");
-                    var body_label = $("<label>Question: </label>");
-                    var body_desc = $("<span class='small_text'>What's the Question?</label>");
-                    body_label.append(body_desc);
-                    var choice_label = $("<label>Answer " + (i+1) +": </label>");
-                    var choice_desc = $("<span class='small_text'>Create an Answer</label>");
-                    var choice = $("<input type='text' placeholder='Possible Answer...' name='choice' class='text_box'></input>");
-                    var ans = $("<input type='radio' name='correctAnswer' id="+i+" value="+ i +"></input><br>");
-                    choice_label.append(choice_desc);
-                    form.append(name_label, name_input, body_label, body, choice_label, choice, ans);
-                    var create_quiz_button = $("<button id='create_quiz_button' class='submit btn blue-btn' type='submit' name='submit'>Create</button>");
-                    dynamic_course_content.append(add_choice_button, form, create_quiz_button);
-                    //This method listens for the create button in the add a course form to be pressed. Once it is,
-                    //it attempts to gather the values and create a new course.
-                    create_quiz_button.click(function(){
-                        checkQuizData(course._id);
-                        return false;
-                    });
-                    //Create the validations for the form.
-                    $("#create_question_form").validate({
-                       rules: {
-                        
-                               lecture_name: {
-                                       required: true
-                               },
-                               body: {
-                                       required: true
-                               },            
-                               choice: {
-                                       required: true
-                               }
-                       }
-                   });
+                        //This method listens for the create button in the add a course form to be pressed. Once it is,
+                        //it attempts to gather the values and create a new course.
+                        create_quiz_button.click(function(){
+                            checkQuizData(course._id);
+                            return false;
+                        });
+                        //Create the validations for the form.
+                        $("#create_question_form").validate({
+                           rules: {
+                            
+                                   lecture_name: {
+                                           required: true
+                                   },
+                                   body: {
+                                           required: true
+                                   },            
+                                   choice: {
+                                           required: true
+                                   }
+                           }
+                       });
+                        active = true;
+                    }
                 });
                 main.append(dynamic_course_content);
                 $("#main").fadeIn();
@@ -383,6 +411,8 @@ function populateCourseSelection(){
 function checkQuizData(course_id){
     console.log(course_id);
     if($("#create_question_form").valid()){
+        //Set the form active boolean to false, so we can create it again.
+        active = false;
         var $inputs = $('#create_question_form :input');
 
         // not sure if you wanted this, but I thought I'd add it.
@@ -408,7 +438,7 @@ function checkQuizData(course_id){
             data: values,
             url:"/create_question",
             success: function(data){
-                console.log(data);
+                populateCourseSelection();
             }
         });
     }

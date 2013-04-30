@@ -364,10 +364,10 @@ app.post("/student", function(request, response) {
             });
         }
         else{
-            console.log("Exists");
-            console.log(doc);
-            constructStudent(doc, response);
-            
+            response.send({
+                data : {student : doc},
+                success : true
+            });
         }
     });
 
