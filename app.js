@@ -531,6 +531,17 @@ function sendQuestions(question_ids, questions, response) {
 
 }
 
+app.post("/studentResponse", function(request, response) {
+    var responses = request.body.responses;
+    //get array of answers based on reponses
+
+    //send student responses to teacher via socket message
+
+    //return correct answers to student via response
+
+
+});
+
 app.post("/remove_course", function(request, response){
     var student_name = request.body.student_name;
     var course_id = toBSONID(request.body.course_id);

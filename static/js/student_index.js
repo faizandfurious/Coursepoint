@@ -370,9 +370,15 @@ function startQuiz(questions, time){
 function sendResponses(questions) {
     var responses = collectResponses(questions);
     
-    socket.emit("studentAnswer", {username : student.username, 
-                                  responses : responses});
-
+    $.ajax({
+        type : "post",
+        url : "/studentResponse",
+        data : {username : student["username"],
+                responses : responses},
+        success : function(data) {
+            showAnswers(data.answers);
+        }
+    });
 
 }
 
@@ -393,6 +399,10 @@ function collectResponses(questions) {
 
     return responses;
    
+}
+
+function showAnswers(answers) {
+    //highlights correct answer for each question
 }
 
 function populateCourseSelection(){
