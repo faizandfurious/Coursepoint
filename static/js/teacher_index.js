@@ -10,7 +10,7 @@ $(document).ready(function(){
     hideTopbarButtons();
     refreshCourseList();
     getCourses();
-    showLogin();
+    $("#course_form").hide();
 });
 
 function hideTopbarButtons(){
@@ -143,15 +143,73 @@ function populateCourseSelection(){
     courses.forEach(function(course){
         console.log(course);
         var classli = $('<li>').html("").attr("id",course._id);
+        classli.css("")
         classli.append($('<span>').html(course.name));
-
+        classli.click(function(){
+            $("#course_list").children("*").css("background-color", "#aaa");
+            $(this).css("background-color", "orange");
+            $("#course_form").fadeOut();
+            var main = $("#main");
+            main.fadeOut(function(){
+                var course_container = $("<div id='course_container'></div>");
+                main.html("");
+                var title = $("<h1 id = 'course_title'></h1>").html(course.name);
+                course_container.append(title);
+                var course_info = $("<div id='course_info'></div>");
+                var location = $("<div id= 'course_location' class='class_item'></div>").html(course.location);
+                var time = $("<div id= 'course_time' class='class_item'></div>").html(course.time);
+                course_info.append(location, time);
+                course_container.append(course_info);
+                main.append(course_container);
+                $("#main").fadeIn();
+            });
+        });
         course_list.append(classli);
     });
     var add_button = $('<li>').html("Add a Course").attr("id", "add_class");
-    add_button.css("background-color", "#ddd");
+
+    //This listener waits for the user to click the Add A Course button on the left hand side.
+    //When it is clicked, we dynamically create the course form.
     add_button.click(function(){
-        console.log("clicked");
+        //Set all of the buttons on the left hand side (except the one clicked) to grey. The current
+        //tab button will be orange.
+        $("#course_list").children("*").css("background-color", "#aaa");
+        $(this).css("background-color", "orange");
+        var main = $("#main");
+        main.fadeOut(function(){
+            var course_container = $("<div id='course_container'></div>");
+            main.html("");
+            var title = $("<h1 id = 'course_title'></h1>").html("Create a Course");
+            course_container.append(title);
+            var form = $("<form id='course_form'</form>");
+            var name_input = $("<input type='text' name='coursename' placeholder='Course Name' autofocus><br>");
+            var location_input = $("<input type='text' name='courselocation' placeholder='Course Location'><br>");
+            var time_input = $("<input type='text' class= 'required' name='coursetime' placeholder='Course Time'><br>");
+            var create_course_button = $("<input id='course_create_button' class='submit btn blue-btn' type='submit' name='submit' value='Create'/>");
+            form.append(name_input, location_input, time_input, create_course_button);
+            //This method listens for the create button in the add a course form to be pressed. Once it is,
+            //it attempts to gather the values and create a new course.
+            create_course_button.click(function(){
+                sendCourseData();
+            });
+
+
+            main.append(course_container, form);
+            $("#main").fadeIn();
+            $("#course_form").fadeIn();
+        });
     })
     course_list.append(add_button);
+}
+
+function sendCourseData(){
+    $("#course_form").validate();
+    var $inputs = $('#course_form :input');
+
+    //This object holds the username and password used to sign in with.
+    var values = {};
+    $inputs.each(function() {
+        console.log($(this).val());
+    });
 }
 
