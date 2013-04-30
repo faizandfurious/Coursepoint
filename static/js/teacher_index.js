@@ -203,18 +203,16 @@ function populateCourseSelection(){
                     
                            coursename: {
                                    required: true,
-                                   minlength: 4,
-                                   maxlength: 20
+                                   minlength: 4
                            },
                            courselocation: {
                                    required: true,
-                                   minlength: 4,
-                                   maxlength: 30
+                                   minlength: 4
                            },            
                            coursetime: {
                                    required: true,
                                    minlength: 4,
-                                   maxlength: 20,
+                                   maxlength: 5,
                                    timeformat: true
                            }
                    },
@@ -246,6 +244,8 @@ function sendCourseData(){
         $inputs.each(function() {
             console.log($(this).val());
         });
+        $('#course_form')[0].reset();
+        $('#banner').css("visibility", "visible").addClass("green-btn").html("Course successfully added").fadeIn().delay(7000).fadeOut();
     }
 }
 
