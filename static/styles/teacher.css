@@ -103,6 +103,13 @@ h1{
     font-size:1em;
 }
 
+label.error{
+    display:block;
+    float: none; 
+    color: red; 
+    padding-left: .5em;
+}
+
 #course_create_button{
     font-size:1em;
 }

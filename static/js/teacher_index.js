@@ -185,31 +185,67 @@ function populateCourseSelection(){
             var name_input = $("<input type='text' name='coursename' placeholder='Course Name' autofocus><br>");
             var location_input = $("<input type='text' name='courselocation' placeholder='Course Location'><br>");
             var time_input = $("<input type='text' class= 'required' name='coursetime' placeholder='Course Time'><br>");
-            var create_course_button = $("<input id='course_create_button' class='submit btn blue-btn' type='submit' name='submit' value='Create'/>");
+            var create_course_button = $("<button id='course_create_button' class='submit btn blue-btn' type='submit' name='submit'>Create</button>");
             form.append(name_input, location_input, time_input, create_course_button);
             //This method listens for the create button in the add a course form to be pressed. Once it is,
             //it attempts to gather the values and create a new course.
             create_course_button.click(function(){
                 sendCourseData();
+                return false;
             });
-
 
             main.append(course_container, form);
             $("#main").fadeIn();
             $("#course_form").fadeIn();
+            //Validations for the course form
+            $("#course_form").validate({
+                   rules: {
+                    
+                           coursename: {
+                                   required: true,
+                                   minlength: 4,
+                                   maxlength: 20
+                           },
+                           courselocation: {
+                                   required: true,
+                                   minlength: 4,
+                                   maxlength: 30
+                           },            
+                           coursetime: {
+                                   required: true,
+                                   minlength: 4,
+                                   maxlength: 20,
+                                   timeformat: true
+                           }
+                   },
+                   messages: {
+                           coursetime: {
+                                   required: "Has to be HH:MM Format",
+                                   minlength: $.format("Keep typing, at least {0} characters required!"),
+                                   maxlength: $.format("Whoa! Maximum {0} characters allowed!")
+                           }
+                   }
+           });
+           $.validator.addMethod("timeformat",
+                   function(value, element) {
+                           return /^(20|21|22|23|[01]\d|\d)(([:][0-5]\d){1,2})$/.test(value);
+                   }
+            );
         });
     })
     course_list.append(add_button);
 }
 
 function sendCourseData(){
-    $("#course_form").validate();
-    var $inputs = $('#course_form :input');
+    if($("#course_form").valid()){
 
-    //This object holds the username and password used to sign in with.
-    var values = {};
-    $inputs.each(function() {
-        console.log($(this).val());
-    });
+        var $inputs = $('#course_form :input');
+
+        //This object holds the username and password used to sign in with.
+        var values = {};
+        $inputs.each(function() {
+            console.log($(this).val());
+        });
+    }
 }
 
