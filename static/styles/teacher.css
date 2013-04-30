@@ -101,7 +101,7 @@ form input[type=radio]{
 }
 
 #holder #main h1{
-    font-size:2em;
+    font-size:1em;
 }
 
 #course_container{
@@ -218,7 +218,7 @@ label.error{
 
 #quiz_listings .question_name{
     float: left;
-    width:500px;
+    width:450px;
 }
 
 #quiz_listings .lecture_name{
@@ -251,4 +251,8 @@ label.error{
 #quiz_listings .answers li.correct{
     color:#dedede;
     background-color:green;
+}
+
+#send_quiz_button{
+    display:block;
 }

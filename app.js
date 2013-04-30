@@ -321,10 +321,10 @@ app.post("/delete_question", function(request, response){
                 if(err)
                     throw err
                 response.send({
-                    data : docs,
+                    data : doc,
                     success : true
                 });
-            }
+            });
         }
     });
 });
