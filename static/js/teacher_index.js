@@ -71,14 +71,6 @@ function loadStudentData (username) {
 
 //ROUTES FOR DATA AND STUFF
 
-//SOCKET MESSAGES
-socket.on("newquestions", function(data) {
-    console.log("new socket message: "+data.qids);
-    var qids = [];
-    qids.push(data.qids);
-    getQuestions(qids);
-});
-
 
 //Get a specific class via the ID
 function getClass(id){
@@ -146,8 +138,15 @@ function refreshCourseList() {
 
 }
 
-function startQuiz(time){
+//teacher assigns questions and waits for responses then calls displayResponses
+function startQuiz(questions, time){
+     var data = {questions : questions, time : time};
+     socket.emit("ask", data);
+}
 
+function displayResponses(responses) {
+    //format: responses[questionId][studentId] = response
+    //display student responses (using raphael...?)
 }
 
 function populateCourseSelection(){
