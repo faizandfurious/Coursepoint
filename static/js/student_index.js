@@ -156,12 +156,12 @@ $(".class_item").click(function(){
 $(".quiz_answer").click(function(){
     var selected_id = $(this).attr("id");
     var siblings = $(this).parent().children();
+    
     siblings.css({'background-color':'#eeeeee',
-                'color':'#333'});
+        'color':'#333'});
     $(this).css({'background-color':'#727272',
-                'color':'#ffffff'});
+        'color':'#ffffff'});
 
-    console.log("Answer chosen is " + selected_id);
 });
 
 
@@ -214,7 +214,7 @@ socket.on("newquestions", function(data) {
     console.log("new socket message: "+data.qids);
     var qids = data.questions;
     var time = data.time;
-    getQuestions(qids);
+    getQuestions(qids, time);
 });
 
 
@@ -241,15 +241,15 @@ function getData(){
 }
 
 //takes an array of qid's and gets corresponding questions
-function getQuestions(questions) {
+function getQuestions(questions, time) {
     console.log("getting: "+questions);
     $.ajax({
         type:"post",
         url:"/questions",
         data:{questions : questions},
         success: function(data){
-            console.log(data);
             //handle questions here
+            startQuiz(data.questions, time);
         }
     });
 }
@@ -331,7 +331,7 @@ function refreshCourseList() {
     });
 }
 
-function startQuiz(time){
+function startQuiz(questions, time){
     $("#timer").html("");
     $("#timer").css("color","green");
 
@@ -361,12 +361,49 @@ function startQuiz(time){
         
         if(timeLeft <= 0) {
             clearInterval(quizTimer);
+            sendResponses(questions);
         }
     }, 100);
     
 }
 
+function sendResponses(questions) {
+    var responses = collectResponses(questions);
+    
+    $.ajax({
+        type : "post",
+        url : "/studentResponse",
+        data : {username : student["username"],
+                responses : responses},
+        success : function(data) {
+            showAnswers(data.answers);
+        }
+    });
 
+}
+
+function collectResponses(questions) {
+    var responses=[];
+
+    while(questions.length >0) {
+        question = questions.pop();
+        choiceList = $("#"+question["question_id"]);
+        var choices = choiceList.children().toArray()
+        while(choices.length >0) {
+            child = choices.pop();
+            if(child.style.background === "rgb(114, 114, 114)") {
+                responses[question["question_id"]] = child.id;    
+            }
+        }
+    }
+
+    return responses;
+   
+}
+
+function showAnswers(answers) {
+    //highlights correct answer for each question
+}
 
 function populateCourseSelection(){
     course_list.html("");
