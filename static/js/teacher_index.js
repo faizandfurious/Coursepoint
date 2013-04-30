@@ -182,9 +182,9 @@ function populateCourseSelection(){
             var title = $("<h1 id = 'course_title'></h1>").html("Create a Course");
             course_container.append(title);
             var form = $("<form id='course_form'</form>");
-            var name_input = $("<input type='text' name='coursename' placeholder='Course Name' autofocus><br>");
-            var location_input = $("<input type='text' name='courselocation' placeholder='Course Location'><br>");
-            var time_input = $("<input type='text' class= 'required' name='coursetime' placeholder='Course Time'><br>");
+            var name_input = $("<input type='text' name='name' placeholder='Course Name' autofocus><br>");
+            var location_input = $("<input type='text' name='location' placeholder='Course Location'><br>");
+            var time_input = $("<input type='text' class= 'required' name='time' placeholder='Course Time'><br>");
             var create_course_button = $("<button id='course_create_button' class='submit btn blue-btn' type='submit' name='submit'>Create</button>");
             form.append(name_input, location_input, time_input, create_course_button);
             //This method listens for the create button in the add a course form to be pressed. Once it is,
@@ -201,15 +201,15 @@ function populateCourseSelection(){
             $("#course_form").validate({
                    rules: {
                     
-                           coursename: {
+                           name: {
                                    required: true,
                                    minlength: 4
                            },
-                           courselocation: {
+                           location: {
                                    required: true,
                                    minlength: 4
                            },            
-                           coursetime: {
+                           time: {
                                    required: true,
                                    minlength: 4,
                                    maxlength: 5,
@@ -217,10 +217,10 @@ function populateCourseSelection(){
                            }
                    },
                    messages: {
-                           coursetime: {
+                           time: {
                                    required: "Has to be HH:MM Format",
-                                   minlength: $.format("Keep typing, at least {0} characters required!"),
-                                   maxlength: $.format("Whoa! Maximum {0} characters allowed!")
+                                   minlength: $.format("At least {0} characters required!"),
+                                   maxlength: $.format("Maximum {0} characters allowed!")
                            }
                    }
            });
@@ -236,8 +236,20 @@ function populateCourseSelection(){
 
 function sendCourseData(){
     if($("#course_form").valid()){
+        data = $("#course_form").serialize();
+        $.ajax({
+            type:"post",
+            data: data,
+            url:"/create_course",
+            success: function(data){
+                courses = data.data;
+                populateCourseSelection();
+            }
+        });
+
 
         var $inputs = $('#course_form :input');
+        console.log($inputs);
 
         //This object holds the username and password used to sign in with.
         var values = {};

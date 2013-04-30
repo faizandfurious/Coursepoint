@@ -206,6 +206,39 @@ app.get("/course/:name", function(request, response) {
     });
 });
 
+app.post("/create_course", function(request, response){
+    var name = request.body.name;
+    var location = request.body.location;
+    var time = request.body.time;
+    courseCollection.findOne({name : name}, function(err, doc){
+    if(err)
+        throw err;
+    if(doc === null){
+        console.log("Doesn't exist");
+        var course = {
+            course_id : 'a9474asdjha19a',
+            name : name,
+            location : location,
+            time : time
+        }
+        courseCollection.insert(course, function (err, doc) {
+            if(err)
+                throw err
+            courseCollection.find().toArray(function(err, docs){
+                if(err)
+                    throw err;
+                if(docs){
+                    response.send({
+                        data : docs,
+                        success : true
+                    })
+                }
+            });
+        });
+    }
+    });
+})
+
 
 //STUDENT ROUTES
 
