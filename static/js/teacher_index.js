@@ -5,6 +5,8 @@ var course_list = $("#course_list");
 
 var courses;
 
+var course_questions;
+
 
 $(document).ready(function(){
     hideTopbarButtons();
@@ -106,6 +108,8 @@ function getQuestionsByCourseId(course_id){
         data:{course_id : course_id},
         success: function(data){
             console.log(data);
+            course_questions = data.data;
+            console.log(course_questions);
         }
     });
 }
