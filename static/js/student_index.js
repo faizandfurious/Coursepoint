@@ -345,42 +345,25 @@ function startQuiz(time){
             timeLeft = 0;
         } 
         
-        var display = Math.floor(timeLeft / 100) / 10;
-        if(Math.round(display) == display) { 
-            display += '.0'; 
+        var display = Math.floor(timeLeft / 1000);
+
+        if(display < 16){
+            $("#timer").css("color","red");
         }
-        document.title = display;
+           
+        var min = Math.floor(display/60);
+        var sec = display%60;
+        if(sec < 10){
+            sec = "0" + sec;
+        }
+        $("#timer").html(min + ":" + sec);
+
         
         if(timeLeft <= 0) {
             clearInterval(quizTimer);
         }
     }, 100);
     
-    var quizInterval = setInterval(function(){
-        if(time < 16){
-            $("#timer").css("color","red");
-        }
-        if(time <= 0){
-            clearInterval(quizInterval);
-        }
-        if(time > 59){
-            var min = Math.floor(time/60);
-            var sec = time%60;
-            if(sec < 10){
-                sec = "0" + sec;
-            }
-            $("#timer").html(min + ":" + sec);
-        }
-        else{
-            var sec = time%60;
-            if(sec < 10){
-                sec = "0" + sec;
-                console.log(sec);
-            }
-            $("#timer").html("0:" + sec);
-        }
-        time--;
-    }, 1000);
 }
 
 
