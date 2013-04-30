@@ -134,8 +134,22 @@ function refreshCourseList() {
 
 }
 
-function startQuiz(time){
+//teacher assigns questions and waits for responses then calls displayResponses
+function startQuiz(questions, time){
+    $ajax({
+        type:"post",
+        data: {questions : questions, time : time},
+        url:"/ask",
+        success: function(data){
+            responses = data.data;
+            displayResponses(responses);
+        }
 
+}
+
+function displayResponses(responses) {
+    //format: responses[questionId][studentId] = response
+    //display student responses (using raphael...?)
 }
 
 function populateCourseSelection(){
