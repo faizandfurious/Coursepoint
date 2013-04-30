@@ -479,29 +479,29 @@ app.post("/ask", function(request, response) {
 
 //take array of question _id's and return questions and choices
 app.post("/questions", function(request, response) {
-    var questions = request.body.questions;
-    var docs = [];
+    var questions_ids = request.body.questions;
+    var questions = [];
     console.log(questions);
 
-    sendQuestions(questions, docs, response);
+    sendQuestions(question_ids, questions, response);
         
 });
 
-function sendQuestions(questions, docs, response) {
-    if(questions.length === 0) {
+function sendQuestions(question_ids, questions, response) {
+    if(question_ids.length === 0) {
         response.send({
-            data : {questions: docs},
+            data : {questions: questions},
             success : true
         });
         return;
     }
 
-    var question_id = questions.shift();
+    var question_id = question_ids.shift();
     questionCollection.findOne({question_id : question_id}, function(err, doc) {
         if(err)
             throw err;
-        docs.push(doc["body"]);
-        return sendQuestions(questions, docs, response);
+        questions.push(doc["body"]);
+        return sendQuestions(question_ids, questions, response);
         
     });
 

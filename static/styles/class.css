@@ -3,6 +3,17 @@
   padding: 10px 0px;
 }
 
+.selected {
+    background-color: "#727272";
+    color: "#ffffff";
+}
+
+
+.unselected {
+    background-color: "#eeeeee";
+    color: "#333";
+}
+
 .class_portrait_image{
     float:left;
     display:inline-block;
