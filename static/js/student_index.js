@@ -212,8 +212,8 @@ function loadStudentData (username) {
 //SOCKET MESSAGES
 socket.on("newquestions", function(data) {
     console.log("new socket message: "+data.qids);
-    var qids = [];
-    qids.push(data.qids);
+    var qids = data.questions;
+    var time = data.time;
     getQuestions(qids);
 });
 

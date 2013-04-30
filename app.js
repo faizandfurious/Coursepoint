@@ -106,9 +106,10 @@ function initializeDB(){
 
 io.sockets.on("connection", function(socket) {
 
-    socket.on('newquestions', function(data) {
+    socket.on('ask', function(data) {
+        console.log("asked: " + data);
         socket.emit('status', {success: 'true'});
-        io.sockets.emit('newquestions', {qids: data.qids});
+        io.sockets.emit('newquestions', {questions: data.questions, time : data.time});
     });
 
 });
@@ -407,33 +408,49 @@ function constructStudent(studentDoc, response) {
 
 //QUESTIONS ROUTES
 
+app.post("/ask", function(request, response) {
+    var questions = request.body.questions;
+    var time = request.body.time;
+    
+    //get students in class
+    //for right now just broadcast to all students
+
+    //socket message to students
+    io.sockets.emit('newquestions', {qids: questions});
+    
+    response.send({
+        data : {},
+        success : true
+    });
+
+
+});
+
 //take array of question _id's and return questions and choices
 app.post("/questions", function(request, response) {
     var questions = request.body.questions;
     var docs = [];
     console.log(questions);
 
-    docs = getQuestions(questions, docs, response);
-    console.log("docs: "+docs);
-
-    
+    sendQuestions(questions, docs, response);
         
 });
 
-function getQuestions(questions, docs, response) {
+function sendQuestions(questions, docs, response) {
     if(questions.length === 0) {
         response.send({
             data : {questions: docs},
             success : true
         });
+        return;
     }
 
-    var qid = questions.shift();
-    questionCollection.findOne({qid : qid}, function(err, doc) {
+    var question_id = questions.shift();
+    questionCollection.findOne({question_id : question_id}, function(err, doc) {
         if(err)
             throw err;
-        docs.push(doc);
-        return getQuestions(questions, docs, response);
+        docs.push(doc["body"]);
+        return sendQuestions(questions, docs, response);
         
     });
 
