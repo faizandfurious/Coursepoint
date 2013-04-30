@@ -105,6 +105,18 @@ function getQuestions(questions) {
     });
 }
 
+function getQuestionsByCourseId(course_id){
+    console.log("getting: questions");
+    console.log("getting: "+course_id);
+    $.ajax({
+        type:"get",
+        url:"/get_questions/" + course_id,
+        data:{course_id : course_id},
+        success: function(data){
+            console.log(data);
+        }
+    });
+}
 
 function getCourses(){
     $.ajax({
@@ -146,6 +158,7 @@ function populateCourseSelection(){
         classli.css("")
         classli.append($('<span>').html(course.name));
         classli.click(function(){
+            getQuestionsByCourseId(course._id);
             $("#course_list").children("*").css("background-color", "#aaa");
             $(this).css("background-color", "orange");
             $("#course_form").fadeOut();
@@ -167,14 +180,79 @@ function populateCourseSelection(){
                         }
                     });
                 });
-                course_container.append(title, delete_button);
+                course_container.append(title);
                 var course_info = $("<div id='course_info'></div>");
                 var location = $("<div id= 'course_location' class='class_item'></div>").html(course.location);
                 var time = $("<div id= 'course_time' class='class_item'></div>").html(course.time);
                 course_info.append(location, time);
                 course_container.append(course_info);
                 main.append(course_container);
+                var dynamic_course_content = $("<div id='dynamic_course_content'></div>");
+                dynamic_course_content.append(delete_button);
+
+                var quiz_create_button = $("<button id='quiz_create_button' class='btn blue-btn'>Create a Question</button>");
+                dynamic_course_content.append(quiz_create_button);
+                var i = 0;
+                quiz_create_button.click(function(){
+                    $("#create_question_form").html("");
+                    var add_choice_button = $("<button id = 'add_a_choice' class='btn blue-btn'>Add Another Answer</button>");
+                    add_choice_button.click(function(){
+                        if(i >= 4){
+
+                        }
+                        else{
+                            ++i;
+                            var choice_label = $("<label>Answer " + (i+1) +": </label>");
+                            var choice_desc = $("<span class='small_text'>Create an Answer</label>");
+                            var choice = $("<input type='text' placeholder='Possible Answer...' name='choice' class='text_box'></input>");
+                            var ans = $("<input type='radio' name='correctAnswer' id="+i+" value="+ i +"></input><br>");
+                            choice_label.append(choice_desc);
+                            form.append(choice_label, choice, ans);
+                        }
+                    });
+                    var create_title = $("<h1>Create a Question");
+                    var form = $("<form id='create_question_form'></form>");
+                    var name_label = $("<label>Lecture Name: </label>");
+                    var name_desc = $("<span class='small_text'>What's the lecture called?</label>");
+                    name_label.append(name_desc);
+                    var name_input = $("<input type='text' name='lecture_name' placeholder='Lecture Name' autofocus><br>");
+                    var body = $("<input type='text' name='body' placeholder='Question?'><br>");
+                    var body_label = $("<label>Question: </label>");
+                    var body_desc = $("<span class='small_text'>What's the Question?</label>");
+                    body_label.append(body_desc);
+                    var choice_label = $("<label>Answer " + (i+1) +": </label>");
+                    var choice_desc = $("<span class='small_text'>Create an Answer</label>");
+                    var choice = $("<input type='text' placeholder='Possible Answer...' name='choice' class='text_box'></input>");
+                    var ans = $("<input type='radio' name='correctAnswer' id="+i+" value="+ i +"></input><br>");
+                    choice_label.append(choice_desc);
+                    form.append(name_label, name_input, body_label, body, choice_label, choice, ans);
+                    var create_quiz_button = $("<button id='create_quiz_button' class='submit btn blue-btn' type='submit' name='submit'>Create</button>");
+                    dynamic_course_content.append(add_choice_button, form, create_quiz_button);
+                    //This method listens for the create button in the add a course form to be pressed. Once it is,
+                    //it attempts to gather the values and create a new course.
+                    create_quiz_button.click(function(){
+                        checkQuizData(course._id);
+                        return false;
+                    });
+                    //Create the validations for the form.
+                    $("#create_question_form").validate({
+                       rules: {
+                        
+                               lecture_name: {
+                                       required: true
+                               },
+                               body: {
+                                       required: true
+                               },            
+                               choice: {
+                                       required: true
+                               }
+                       }
+                   });
+                });
+                main.append(dynamic_course_content);
                 $("#main").fadeIn();
+
             });
         });
         course_list.append(classli);
@@ -194,7 +272,7 @@ function populateCourseSelection(){
             main.html("");
             var title = $("<h1 id = 'course_title'></h1>").html("Create a Course");
             course_container.append(title);
-            var form = $("<form id='course_form'</form>");
+            var form = $("<form id='course_form'></form>");
             var name_input = $("<input type='text' name='name' placeholder='Course Name' autofocus><br>");
             var location_input = $("<input type='text' name='location' placeholder='Course Location'><br>");
             var time_input = $("<input type='text' class= 'required' name='time' placeholder='Course Time'><br>");
@@ -245,6 +323,40 @@ function populateCourseSelection(){
         });
     })
     course_list.append(add_button);
+}
+
+function checkQuizData(course_id){
+    console.log(course_id);
+    if($("#create_question_form").valid()){
+        var $inputs = $('#create_question_form :input');
+
+        // not sure if you wanted this, but I thought I'd add it.
+        // get an associative array of just the values.
+        var values = {};
+        $inputs.each(function() {
+            values[this.name] = $(this).val();
+        });
+
+        var $choice_inputs = $('input:text[name=choice]');
+        var choices = [];
+        $choice_inputs.each(function() {
+            choices.push($(this).val());
+        });
+        console.log(choices);
+
+        delete values["choice"];
+        values["choices"] = choices;
+        values["course_id"] = course_id;
+
+        $.ajax({
+            type:"post",
+            data: values,
+            url:"/create_question",
+            success: function(data){
+                console.log(data);
+            }
+        });
+    }
 }
 
 function sendCourseData(){

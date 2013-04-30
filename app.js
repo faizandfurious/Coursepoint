@@ -268,6 +268,57 @@ app.post("/create_course", function(request, response){
     });
 })
 
+app.post("/create_question", function(request, response){
+    var lecture_name = request.body.lecture_name;
+    var body = request.body.body;
+    var correctAnswer = request.body.correctAnswer;
+    var choices = request.body.choices;
+    var course_id = request.body.course_id;
+    questionCollection.findOne({lecture_name : lecture_name, course_id : course_id, body : body}, function(err, doc){
+    if(err)
+        throw err;
+    if(doc === null){
+        console.log("Doesn't exist");
+        var question = {
+            course_id : course_id,
+            lecture_name : lecture_name,
+            correctAnswer : correctAnswer,
+            body : body,
+            correctAnswer : correctAnswer
+        }
+        questionCollection.insert(question, function (err, doc) {
+            if(err)
+                throw err
+            questionCollection.find({course_id : course_id}).toArray(function(err, docs){
+                if(err)
+                    throw err;
+                if(docs){
+                    response.send({
+                        data : docs,
+                        success : true
+                    })
+                }
+            });
+        });
+    }
+    });
+})
+
+app.get("/get_questions/:course_id", function(request, response){
+    
+    var course_id = request.params.course_id;
+    questionCollection.find({course_id : course_id}).toArray(function(err, docs){
+        if(err)
+            throw err;
+        if(docs){
+            response.send({
+                data : docs,
+                success : true
+            });
+        }
+    });
+});
+
 
 //STUDENT ROUTES
 
