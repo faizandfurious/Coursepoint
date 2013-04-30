@@ -335,6 +335,27 @@ function startQuiz(time){
     $("#timer").html("");
     $("#timer").css("color","green");
 
+//this timer code was adapted from the example in
+//http://www.sitepoint.com/creating-accurate-timers-in-javascript/    
+    var start = new Date().getTime()+time*1000;
+
+    var quizTimer = setInterval(function() {
+        var timeLeft = start - (new Date().getTime());
+        if(timeLeft <= 0) {
+            timeLeft = 0;
+        } 
+        
+        var display = Math.floor(timeLeft / 100) / 10;
+        if(Math.round(display) == display) { 
+            display += '.0'; 
+        }
+        document.title = display;
+        
+        if(timeLeft <= 0) {
+            clearInterval(quizTimer);
+        }
+    }, 100);
+    
     var quizInterval = setInterval(function(){
         if(time < 16){
             $("#timer").css("color","red");
@@ -361,6 +382,8 @@ function startQuiz(time){
         time--;
     }, 1000);
 }
+
+
 
 function populateCourseSelection(){
     course_list.html("");

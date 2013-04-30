@@ -109,7 +109,7 @@ io.sockets.on("connection", function(socket) {
     socket.on('ask', function(data) {
         console.log("asked: " + data);
         socket.emit('status', {success: 'true'});
-        io.sockets.emit('newquestions', {questions: data.questions, time : data.time});
+        io.sockets.emit('newquestions', data);
     });
 
 });
