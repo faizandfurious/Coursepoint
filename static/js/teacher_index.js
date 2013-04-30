@@ -154,7 +154,20 @@ function populateCourseSelection(){
                 var course_container = $("<div id='course_container'></div>");
                 main.html("");
                 var title = $("<h1 id = 'course_title'></h1>").html(course.name);
-                course_container.append(title);
+                var delete_button = $("<button id='delete_button' class='btn red-btn'>Delete</button>");
+                delete_button.click(function(){
+                    console.log(course._id);
+                    $.ajax({
+                        type:"post",
+                        data: {course_id : course._id},
+                        url:"/delete_course",
+                        success: function(data){
+                            courses = data.data;
+                            populateCourseSelection();
+                        }
+                    });
+                });
+                course_container.append(title, delete_button);
                 var course_info = $("<div id='course_info'></div>");
                 var location = $("<div id= 'course_location' class='class_item'></div>").html(course.location);
                 var time = $("<div id= 'course_time' class='class_item'></div>").html(course.time);

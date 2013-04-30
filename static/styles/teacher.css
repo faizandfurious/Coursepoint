@@ -127,3 +127,8 @@ label.error{
     line-height:35px;
     border-radius:6px;
 }
+
+#delete_button{
+    float:left;
+    font-size:1em;
+}

@@ -206,6 +206,35 @@ app.get("/course/:name", function(request, response) {
     });
 });
 
+app.post("/delete_course", function(request, response){
+    var _id = toBSONID(request.body.course_id);
+    var query = {_id : _id};
+    console.log(_id);
+    courseCollection.findOne(query, function(err, doc){
+        if(err)
+            throw err;
+        if(doc === null){
+            console.log("Doesn't exist");
+        }
+        else{
+            courseCollection.remove(query, function(err, doc){
+                if(err)
+                    throw err
+                courseCollection.find().toArray(function(err, docs){
+                    if(err)
+                        throw err;
+                    if(docs){
+                        response.send({
+                            data : docs,
+                            success : true
+                        });
+                    }
+                });
+            })
+        }
+    });
+});
+
 app.post("/create_course", function(request, response){
     var name = request.body.name;
     var location = request.body.location;
