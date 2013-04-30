@@ -195,6 +195,30 @@ function populateCourseSelection(){
 
                 var quiz_create_button = $("<button id='quiz_create_button' class='btn blue-btn'>Create a Question</button>");
                 dynamic_course_content.append(quiz_create_button);
+                var quiz_listings = $('<div id="quiz_listings">');
+                for(var i = 0; i < courses.length; i++){
+                    question = course_questions[i];
+                    var question_area = $('<div class="question_area"></div>');
+                    var question_name = $('<h1 class="question_name"></h1>').html(question.body);
+                    var lecture_name = $('<h1 class="lecture_name"></h1>').html(question.body);
+                    var choices_name = $('<h1 class="choices_name">Choices:</h1>');
+                    var answers_ul = $('<ul class="answers"></ul>');
+                    for(var j = 0; j < courses.choices.length; j++){
+                        var choice;
+                        if(course.correctAnswer === j){
+                            choice = $('<li class="choices correct"></li>').html(courses.choices[j]);
+                        }
+                        else{
+                            choice = $('<li class="choices"></li>').html(courses.choices[j]);
+                        }
+                        answers_ul.append(choice);
+                    }
+                    question_area.append(question_name, lecture_name, choices_name, answers_ul);
+                }
+                quiz_listings.append(question_area);
+
+
+                //Quiz Form Creation
                 var i = 0;
                 quiz_create_button.click(function(){
                     $("#create_question_form").html("");

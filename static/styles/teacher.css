@@ -1,5 +1,5 @@
 html{
-    overflow: hidden;
+    height:100%;
 }
 
 body{
@@ -38,6 +38,7 @@ form input[type=radio]{
     width:1100px;
 }
 #topbar{
+    position:absolute;
     width:1100px;
 }
 
@@ -85,7 +86,18 @@ form input[type=radio]{
 #main{
     padding:40px 30px 0px 30px;
     font-size:16px;
-    height:100%;
+    overflow:hidden;
+}
+
+#quiz_listings{
+    padding:40px 30px 0px 30px;
+    font-size:16px;
+}
+
+.question_area{
+    background-color:#ddd;
+    border-radius:6px;
+    padding:8px;
 }
 
 #holder #main h1{
@@ -198,4 +210,45 @@ label.error{
 #create_quiz_button{
     display:block;
     clear:both;
+}
+
+#quiz_listings {
+
+}
+
+#quiz_listings .question_name{
+    float: left;
+    width:500px;
+}
+
+#quiz_listings .lecture_name{
+    float:right;
+    width:300px;
+    text-align:right;
+}
+
+#quiz_listings .answers{
+    font-family: 'Century Gothic', 'Helvetica';
+    padding:5px 3px;
+    margin-top:10px;
+    clear: both;
+    border:1px solid #aaa;
+    border-radius:6px;
+}
+
+#quiz_listings .choices_name{
+    margin:20px 0px;
+    clear: both;
+    float: left;
+}
+
+#quiz_listings .answers li{
+    color:black;
+    padding:20px 20px;
+    border-radius:6px;
+}
+
+#quiz_listings .answers li.correct{
+    color:#dedede;
+    background-color:green;
 }
