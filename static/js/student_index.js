@@ -417,6 +417,16 @@ function createQuiz(data){
     var ul = $("<ul id='' class='answer_list'></ul>");
     for(var i = 0; i < question.choices.length; i++){
         var li = $("<li id='' class='quiz_answer'></li>").html(question.choices[i]);
+        li.click(function(){
+            var selected_id = $(this).attr("id");
+            console.log(selected_id);
+            var siblings = $(this).parent().children();
+            
+            siblings.css({'background-color':'#eeeeee',
+                'color':'#333'});
+            $(this).css({'background-color':'#727272',
+                'color':'#ffffff'});
+        });
         ul.append(li);
     }
     question_container.append(question_h3, question_prompt, answer_h3, ul);
