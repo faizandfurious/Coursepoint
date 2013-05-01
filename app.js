@@ -165,6 +165,11 @@ app.get("/static/js/:staticFilename", function (request, response) {
     response.sendfile("static/js/" + request.params.staticFilename);
 });
 
+// This is for serving files in the static raphael directory
+app.get("/static/js/raphael/:staticFilename", function (request, response) {
+    response.sendfile("static/js/raphael/" + request.params.staticFilename);
+});
+
 //COURSE ROUTES
 
 app.post("/course", function(request, response) {

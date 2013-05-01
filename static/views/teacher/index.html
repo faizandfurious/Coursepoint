@@ -6,6 +6,7 @@
   <title>Coursepoint</title>
 </head>
 <body>
+  <div id="div_shadow"></div>
   <div id="container">
     <div id="topbar" class="grey">
       <h1>Coursepoint</h1>
@@ -19,6 +20,10 @@
 
       <div id="holder" class="grey_drop">
         <div id="banner"></div>
+        <div id="overlay">
+          <button id="raphael_close_button" class="btn red-btn">Close</button>
+          <div id="raphael"></div>
+        </div>
         <div id="main">
 <!--           <div id="course_container">
             <h1 id="course_title"></h1>
@@ -41,6 +46,10 @@
   </div>
 
     <script src="../../js/jquery-1.9.0.js"></script>
+    <script type="text/javascript" src="../../js/raphael/raphael.js"></script>
+    <script type="text/javascript" src="../../js/raphael/g.raphael-min.js"></script>
+    <script type="text/javascript" src="../../js/raphael/g.bar-min.js"></script>
+    <script type="text/javascript" src="../../js/raphael/g.pie-min.js"></script>
     <script language="javascript" type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.10.0/jquery.validate.min.js"></script>
     <script src="http://localhost:8888/socket.io/socket.io.js"></script>
     <script src="../../js/teacher_index.js"></script> 
