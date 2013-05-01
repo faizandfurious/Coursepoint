@@ -10,41 +10,32 @@ var course_questions;
 //Used for course creation form
 var active = false;
 
+var r = Raphael("raphael");
+var pie;
+
 
 $(document).ready(function(){
-    hideTopbarButtons();
-    refreshCourseList();
     getCourses();
     $("#course_form").hide();
+    hideRaphael();
 });
 
-function hideTopbarButtons(){
-
+function hideRaphael(){
+    $("#div_shadow").fadeOut();
+    $("#overlay").fadeOut();
 }
 
-function showTopbarButtons(){
-
+function showRaphael(values, legend){
+    $("#div_shadow").css("visibility", "visible");
+    $("#overlay").css("visibility", "visible");
+    $("#overlay").fadeIn();
+    $("#div_shadow").fadeIn();
+    r.piechart(100, 100, 80, values, { legend: legend, legendpos: "south"});
 }
 
-function showLogin(){
-
-}
-
-
-function showClass(){
-
-}
-
-function showQuiz(){
-
-}
-
-
-function toggleMenu(){
-
-}
-
-
+$("#raphael_close_button").click(function(){
+    hideRaphael();
+})
 $("#add_class_button").click(function(){
 
 });
@@ -231,7 +222,10 @@ function populateCourseSelection(){
                     var question_name = $('<h1 class="question_name"></h1>').html(question.body);
                     var lecture_name = $('<h1 class="lecture_name"></h1>').html(question.lecture_name);
                     var send_question_button = $("<button id = 'send_question_button' class='btn green-btn'>Administer Question</button>");
+                    var show_raphael_button = $("<button id = 'show_raphael_button' class='btn blue-btn'>Show Results</button>");
                     var delete_question_button = $("<button id = 'delete_question_button' class='btn red-btn'>Delete Question</button>");
+                    var answer_choices = [];
+                    var count = [];
 
                     send_question_button.click(function(){
                         console.log();
@@ -243,22 +237,31 @@ function populateCourseSelection(){
                         delete_question_button.parent().fadeOut();
                     });
 
-
-
-
                     var choices_name = $('<h1 class="choices_name">Choices:</h1>');
                     var answers_ul = $('<ul class="answers"></ul>');
                     for(var j = 0; j < question.choices.length; j++){
+                        count.push(j);
+                        answer_choices.push(question.choices[j]);
                         var choice;
-                        if(course.correctAnswer === j){
+                        console.log(question.correctAnswer + " " + j);
+                        if(question.correctAnswer == j){
                             choice = $('<li class="choices correct"></li>').html(question.choices[j]);
                         }
                         else{
-                            choice = $('<li class="choices"></li>').html(question.choices[j]);
+                            choice = $('<li class="choices incorrect"></li>').html(question.choices[j]);
                         }
                         answers_ul.append(choice);
                     }
-                    question_area.append(send_question_button, delete_question_button, question_name, lecture_name, choices_name, answers_ul);
+
+
+                    show_raphael_button.click(function(){
+                        //GIVE DATA HERE
+                        var values = [10, 4, 8];
+                        showRaphael(count, answer_choices);
+                    });
+
+
+                    question_area.append(send_question_button, show_raphael_button, delete_question_button, question_name, lecture_name, choices_name, answers_ul);
                     quiz_listings.append(question_area);
                 }
                 dynamic_course_content.append(quiz_listings);
@@ -284,7 +287,7 @@ function populateCourseSelection(){
                                 form.append(choice_label, choice, ans);
                             }
                         });
-                        var create_title = $("<h1>Create a Question");
+                        var create_title = $("<h1>Create a Question</h1>");
                         var form = $("<form id='create_question_form'></form>");
                         var name_label = $("<label>Lecture Name: </label>");
                         var name_desc = $("<span class='small_text'>What's the lecture called?</label>");
@@ -432,7 +435,7 @@ function checkQuizData(course_id){
         delete values["choice"];
         values["choices"] = choices;
         values["course_id"] = course_id;
-
+        console.log(values);
         $.ajax({
             type:"post",
             data: values,
