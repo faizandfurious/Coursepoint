@@ -211,7 +211,7 @@ function loadStudentData (username) {
 
 //SOCKET MESSAGES
 socket.on("newquestions", function(data) {
-    console.log("new socket message: "+data.qids);
+    console.log("new socket message: "+data.questions);
     var qids = data.questions;
     var time = data.time;
     getQuestions(qids, time);
@@ -249,7 +249,8 @@ function getQuestions(questions, time) {
         data:{questions : questions},
         success: function(data){
             //handle questions here
-            startQuiz(data.questions, time);
+            console.log("questions: "+questions);
+            startQuiz(questions, time);
         }
     });
 }
@@ -385,9 +386,11 @@ function sendResponses(questions) {
 function collectResponses(questions) {
     var responses=[];
 
-    while(questions.length >0) {
-        question = questions.pop();
-        choiceList = $("#"+question["question_id"]);
+/*    while(questions.length >0) {
+        question = questions.pop();*/
+        var question = questions; //just handle one question for now
+        choiceList = $("#"+question);
+        console.log(choiceList);
         var choices = choiceList.children().toArray()
         while(choices.length >0) {
             child = choices.pop();
@@ -395,7 +398,7 @@ function collectResponses(questions) {
                 responses[question["question_id"]] = child.id;    
             }
         }
-    }
+//    }
 
     return responses;
    

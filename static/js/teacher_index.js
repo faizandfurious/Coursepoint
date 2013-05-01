@@ -227,7 +227,7 @@ function populateCourseSelection(){
                 for(var i = 0; i < course_questions.length; i++){
                     question = course_questions[i];
                     console.log(question);
-                    var question_area = $('<div class="question_area"></div>');
+                    var question_area = $('<div id="'+question._id+'" class="question_area"></div>');
                     var question_name = $('<h1 class="question_name"></h1>').html(question.body);
                     var lecture_name = $('<h1 class="lecture_name"></h1>').html(question.lecture_name);
                     var send_question_button = $("<button id = 'send_question_button' class='btn green-btn'>Administer Question</button>");
@@ -235,6 +235,8 @@ function populateCourseSelection(){
 
                     send_question_button.click(function(){
                         console.log();
+                        questionId = $(this).parent().attr("id");
+                        startQuiz(questionId, 5);
                         //SEND THE QUIZ TO THE STUDENTS
                     });
 

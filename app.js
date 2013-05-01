@@ -491,7 +491,7 @@ app.post("/ask", function(request, response) {
     //for right now just broadcast to all students
 
     //socket message to students
-    io.sockets.emit('newquestions', {qids: questions});
+    io.sockets.emit('newquestions', {questions: questions, time:time});
     
     response.send({
         data : {},
@@ -503,7 +503,7 @@ app.post("/ask", function(request, response) {
 
 //take array of question _id's and return questions and choices
 app.post("/questions", function(request, response) {
-    var questions_ids = request.body.questions;
+    var question_ids = request.body.questions;
     var questions = [];
     console.log(questions);
 
@@ -520,12 +520,17 @@ function sendQuestions(question_ids, questions, response) {
         return;
     }
 
-    var question_id = question_ids.shift();
-    questionCollection.findOne({question_id : question_id}, function(err, doc) {
+//    var question_id = question_ids.shift();
+//just one question for now
+    var question_id = question_ids;
+    questionCollection.findOne({_id : toBSONID(question_id)}, function(err, doc) {
         if(err)
             throw err;
+        console.log("----------------id : " + question_id);
         questions.push(doc["body"]);
-        return sendQuestions(question_ids, questions, response);
+        //return sendQuestions(question_ids, questions, response);
+        //just one question for now
+        return sendQuestions("", questions, response);
         
     });
 
