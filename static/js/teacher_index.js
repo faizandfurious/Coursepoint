@@ -230,7 +230,7 @@ function populateCourseSelection(){
                     send_question_button.click(function(){
                         console.log();
                         questionId = $(this).parent().attr("id");
-                        startQuiz(questionId, 5);
+                        startQuiz(questionId, 70);
                         //SEND THE QUIZ TO THE STUDENTS
                     });
 
