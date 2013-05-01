@@ -212,7 +212,7 @@ function loadStudentData (username) {
 
 //SOCKET MESSAGES
 socket.on("newquestions", function(data) {
-    console.log("new socket message: "+data.qids);
+    console.log("new socket message: "+data.questions);
     var qids = data.questions;
     var time = data.time;
     getQuestions(qids, time);
@@ -249,6 +249,7 @@ function getQuestions(questions, time) {
         url:"/questions",
         data:{questions : questions},
         success: function(data){
+            console.log(data);
             //handle questions here
             createQuiz(data);
             startQuiz(data.questions, time);
@@ -387,9 +388,11 @@ function sendResponses(questions) {
 function collectResponses(questions) {
     var responses=[];
 
-    while(questions.length >0) {
-        question = questions.pop();
-        choiceList = $("#"+question["question_id"]);
+/*    while(questions.length >0) {
+        question = questions.pop();*/
+        var question = questions; //just handle one question for now
+        choiceList = $("#"+question);
+        console.log(choiceList);
         var choices = choiceList.children().toArray()
         while(choices.length >0) {
             child = choices.pop();
@@ -397,21 +400,23 @@ function collectResponses(questions) {
                 responses[question["question_id"]] = child.id;    
             }
         }
-    }
+//    }
 
     return responses;
    
 }
 
 
-function createQuiz(){
+function createQuiz(data){
+    console.log(data.data.question);
+    var question = data.data.question;
     var question_container = $("<div class='question'></div>");
     var question_h3 = $("<h3></h3>").html("Question");
-    var question_prompt = $("<p id='question_prompt'></p>").html("What is the derivative of 12x^2?.");
+    var question_prompt = $("<p id='question_prompt'></p>").html(question.body);
     var answer_h3 = $("<h3></h3>").html("Answer");
     var ul = $("<ul id='' class='answer_list'></ul>");
-    for(var i = 0; i < 4; i++){
-        var li = $("<li id='' class='quiz_answer'></li>").html("12x");
+    for(var i = 0; i < question.choices.length; i++){
+        var li = $("<li id='' class='quiz_answer'></li>").html(question.choices[i]);
         ul.append(li);
     }
     question_container.append(question_h3, question_prompt, answer_h3, ul);
