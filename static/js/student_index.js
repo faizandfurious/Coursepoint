@@ -21,6 +21,7 @@ $(document).ready(function(){
     refreshCourseList();
     getCourses();
     showLogin();
+    createQuiz();
 });
 
 function hideTopbarButtons(){
@@ -249,6 +250,7 @@ function getQuestions(questions, time) {
         data:{questions : questions},
         success: function(data){
             //handle questions here
+            createQuiz(data);
             startQuiz(data.questions, time);
         }
     });
@@ -401,6 +403,20 @@ function collectResponses(questions) {
    
 }
 
+
+function createQuiz(){
+    var question_container = $("<div class='question'></div>");
+    var question_h3 = $("<h3></h3>").html("Question");
+    var question_prompt = $("<p id='question_prompt'></p>").html("What is the derivative of 12x^2?.");
+    var answer_h3 = $("<h3></h3>").html("Answer");
+    var ul = $("<ul id='' class='answer_list'></ul>");
+    for(var i = 0; i < 4; i++){
+        var li = $("<li id='' class='quiz_answer'></li>").html("12x");
+        ul.append(li);
+    }
+    question_container.append(question_h3, question_prompt, answer_h3, ul);
+    $("#quiz_content").append(question_container);
+}
 function showAnswers(answers) {
     //highlights correct answer for each question
 }

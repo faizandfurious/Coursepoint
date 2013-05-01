@@ -375,8 +375,9 @@ button#add_class_button:active, button#add_class_button:focus{
 }
 
 #timer{
+    font-size:1em;
     position:absolute;
-    right:60px;
+    right:43px;
     color:green;
 }
 
