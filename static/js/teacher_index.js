@@ -152,17 +152,17 @@ function deleteQuestion(question_id){
 }
 
 
-function addCourse(course_id){
 
-}
 
-function removeCourse(course_id){
 
-}
 
-function refreshCourseList() {
 
-}
+
+
+
+
+
+
 
 //teacher assigns questions and waits for responses then calls displayResponses
 function startQuiz(questions, time){
